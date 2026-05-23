@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Global Democracy Monitor — All 193 UN Member States</title>
+<meta name="description" content="Live global democracy tracking for all 193 UN member states. V-Dem 2025, Freedom House 2025, RSF 2025, EIU 2024, Mo Ibrahim 2024. AI-powered news, erosion analysis, and leader biographies."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@300;400;500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+:root{
+  --ink:#030812;--ink2:#050f1e;--ink3:#0d1628;--ink4:#16233a;--fog:#2a3a56;
+  --mist:#546080;--smoke:#7a8ab0;--silver:#a8b4cc;--chalk:#d4dae8;--white:#f8f9fd;
+  --gold:#c8a84b;--gold2:#e6c86a;
+  --em3:#4dcc8a;--am3:#f5b544;--cr3:#f05050;--sa3:#5588ee;
+  --em-bg:rgba(26,122,74,.15);--am-bg:rgba(160,96,16,.15);--cr-bg:rgba(139,26,26,.15);--sa-bg:rgba(26,58,122,.2);
+  --serif:'Playfair Display',serif;--body:'Lora',Georgia,serif;--mono:'IBM Plex Mono','Courier New',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--ink);color:var(--chalk);font-family:var(--body);font-size:14px;line-height:1.6;min-height:100vh}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--ink2)}::-webkit-scrollbar-thumb{background:var(--fog);border-radius:3px}
+button{cursor:pointer;font-family:var(--mono)}input,select{font-family:var(--mono);font-size:12px}
+a{color:var(--sa3);text-decoration:none}a:hover{text-decoration:underline}
+.wrap{max-width:1920px;margin:0 auto;padding:0 14px}
+
+/* MASTHEAD */
+.mhd{background:linear-gradient(180deg,#060912,var(--ink2));border-bottom:1px solid var(--fog);padding:12px 18px 0;position:sticky;top:0;z-index:100;box-shadow:0 4px 40px rgba(0,0,0,.9)}
+.mhd-top{max-width:1920px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.brand h1{font-family:var(--serif);font-size:20px;font-weight:900;color:#fff;letter-spacing:-.03em}
+.brand h1 em{font-style:normal;color:var(--gold)}
+.brand-sub{font-family:var(--mono);font-size:9px;color:var(--mist);margin-top:2px;letter-spacing:.08em;text-transform:uppercase}
+.hdr-pills{display:flex;gap:12px;flex-wrap:wrap;align-items:center;padding-bottom:6px}
+.pill{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;color:var(--smoke)}
+.pdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.nav{display:flex;max-width:1920px;margin:0 auto}
+.ntab{padding:9px 17px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;background:transparent;border:none;color:var(--mist);border-bottom:2px solid transparent;cursor:pointer;transition:all .2s}
+.ntab:hover{color:var(--chalk)}.ntab.on{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border-radius:5px;padding:5px 11px;cursor:pointer;border:1px solid;transition:all .2s}
+.bg{background:rgba(200,168,75,.1);border-color:var(--gold);color:var(--gold2)}.bg:hover{background:rgba(200,168,75,.2)}
+.bb{background:rgba(26,58,122,.2);border-color:#2255b8;color:var(--sa3)}.bb:hover{background:rgba(26,58,122,.35)}
+.br{background:rgba(139,26,26,.2);border-color:#c22222;color:var(--cr3)}.br:hover{background:rgba(139,26,26,.35)}
+.bgh{background:transparent;border-color:var(--fog);color:var(--smoke)}.bgh:hover{color:var(--chalk)}
+.bsm{padding:3px 7px;font-size:9px}
+
+/* FILTERS */
+.fbar{background:var(--ink2);border:1px solid var(--ink4);border-radius:8px;padding:9px 13px;margin-bottom:11px;display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.flbl{font-family:var(--mono);font-size:9px;color:var(--mist);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.fsel,.finp{background:var(--ink);border:1px solid var(--ink4);border-radius:5px;color:var(--chalk);padding:4px 8px;outline:none;transition:border-color .2s;font-family:var(--mono);font-size:11px}
+.fsel:focus,.finp:focus{border-color:var(--gold)}.finp{width:190px}.finp::placeholder{color:var(--mist)}
+.rct{font-family:var(--mono);font-size:10px;color:var(--mist);margin-left:auto}
+
+/* TABLE */
+.twrap{overflow-x:auto;border-radius:8px;border:1px solid var(--ink4);max-height:calc(100vh - 200px)}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px}
+thead{position:sticky;top:0;z-index:10}
+th{background:var(--ink);padding:8px 9px;text-align:left;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--mist);border-bottom:1px solid var(--fog);white-space:nowrap;cursor:pointer;user-select:none}
+th:hover{color:var(--chalk)}.thon{color:var(--gold)!important}
+.dr{transition:background .1s;cursor:pointer}
+.dr:nth-child(odd){background:#080d1c}.dr:nth-child(even){background:var(--ink2)}.dr:hover{background:var(--ink3)!important}
+td{padding:6px 9px;border-bottom:1px solid var(--ink4);vertical-align:middle}
+.tdc{border-left:3px solid;font-weight:700;color:var(--white);white-space:nowrap}
+.tl{color:var(--chalk);cursor:pointer;border-bottom:1px dotted var(--fog)}.tl:hover{color:var(--gold2);border-bottom-color:var(--gold)}
+
+/* BADGES */
+.bdg{display:inline-block;border-radius:3px;padding:2px 6px;font-family:var(--mono);font-size:10px;font-weight:700;white-space:nowrap;border:1px solid}
+.bF{background:var(--em-bg);color:var(--em3);border-color:rgba(26,122,74,.4)}
+.bPF{background:var(--am-bg);color:var(--am3);border-color:rgba(160,96,16,.4)}
+.bNF{background:var(--cr-bg);color:var(--cr3);border-color:rgba(139,26,26,.4)}
+.bFD{background:var(--sa-bg);color:#6ba3f5;border-color:rgba(26,58,122,.5)}
+.bFlD{background:rgba(34,100,80,.2);color:#5dd4a8;border-color:rgba(34,100,80,.5)}
+.bHR{background:rgba(120,60,0,.2);color:#f0a860;border-color:rgba(120,60,0,.5)}
+.bAuth{background:var(--cr-bg);color:var(--cr3);border-color:rgba(139,26,26,.5)}
+.blow{background:var(--em-bg);color:var(--em3);border-color:rgba(26,122,74,.4)}
+.bmed{background:var(--am-bg);color:var(--am3);border-color:rgba(160,96,16,.4)}
+.bhigh{background:rgba(180,80,0,.15);color:#f07840;border-color:rgba(180,80,0,.4)}
+.bcrit{background:var(--cr-bg);color:var(--cr3);border-color:rgba(139,26,26,.4)}
+
+/* SCORE BAR */
+.sbw{display:flex;align-items:center;gap:5px}
+.sbn{font-family:var(--mono);font-size:11px;font-weight:700;width:36px;text-align:right;flex-shrink:0}
+.sbt{height:4px;border-radius:2px;background:var(--ink4);flex:1;min-width:40px;overflow:hidden}
+.sbf{height:100%;border-radius:2px}
+
+/* TRENDS */
+.tup{color:#4dcc8a;font-size:14px;font-weight:700}
+.tstb{color:var(--mist);font-size:14px}
+.tdn{color:#f07840;font-size:14px;font-weight:700}
+.tcr{color:#f05050;font-size:14px;font-weight:700}
+
+/* EROSION CELL */
+.erow{list-style:none;display:flex;flex-direction:column;gap:3px;max-width:200px}
+.ei{font-family:var(--mono);font-size:9px;color:var(--silver);padding:2px 5px;background:rgba(139,26,26,.08);border-left:2px solid #c22222;border-radius:0 3px 3px 0;line-height:1.4}
+.mbt{font-family:var(--mono);font-size:9px;color:var(--sa3);background:none;border:none;cursor:pointer;padding:2px 0}.mbt:hover{color:var(--gold)}
+
+/* NEWS CELL */
+.ncw{max-width:180px}
+.nhl{font-size:11px;color:var(--chalk);line-height:1.4;margin-bottom:2px;cursor:pointer}.nhl:hover{color:var(--gold2)}
+.nmt{font-family:var(--mono);font-size:9px;color:var(--mist)}.nsrc{color:var(--sa3)}
+.nld{font-family:var(--mono);font-size:10px;color:var(--mist);animation:bth 1.5s infinite}
+@keyframes bth{0%,100%{opacity:.3}50%{opacity:1}}
+.lnb{background:rgba(26,58,122,.15);border:1px solid rgba(85,136,238,.3);color:var(--sa3);border-radius:4px;padding:3px 7px;font-family:var(--mono);font-size:9px;cursor:pointer}.lnb:hover{background:rgba(26,58,122,.3)}
+
+/* PANEL */
+.ovl{position:fixed;inset:0;background:rgba(4,7,18,.87);backdrop-filter:blur(6px);z-index:500;display:flex;justify-content:flex-end;animation:fdi .2s ease}
+@keyframes fdi{from{opacity:0}to{opacity:1}}
+.panel{width:560px;max-width:96vw;height:100vh;background:var(--ink2);border-left:1px solid var(--fog);overflow-y:auto;display:flex;flex-direction:column;animation:sli .25s ease}
+@keyframes sli{from{transform:translateX(40px);opacity:0}to{transform:translateX(0);opacity:1}}
+.ph{padding:18px;border-bottom:1px solid var(--ink4);background:var(--ink);position:sticky;top:0;z-index:10}
+.ptit{font-family:var(--serif);font-size:19px;font-weight:700;color:var(--white);line-height:1.2}
+.psub{font-family:var(--mono);font-size:10px;color:var(--mist);margin-top:4px}
+.pb{padding:18px;flex:1}
+.pcl{background:none;border:1px solid var(--fog);color:var(--smoke);border-radius:5px;padding:5px 10px;font-family:var(--mono);font-size:10px;cursor:pointer}.pcl:hover{color:var(--chalk)}
+.stit{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin:14px 0 7px;padding-bottom:4px;border-bottom:1px solid var(--ink4);display:flex;align-items:center;justify-content:space-between}
+.igr{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}
+.ic{background:var(--ink3);border:1px solid var(--ink4);border-radius:6px;padding:9px 11px}
+.ic label{font-family:var(--mono);font-size:9px;color:var(--mist);letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:2px}
+.ic .v{font-size:12px;color:var(--white);font-weight:600}
+.btext{font-family:var(--body);font-size:13px;color:var(--silver);line-height:1.7}
+.fac{background:rgba(200,168,75,.05);border:1px solid rgba(200,168,75,.2);border-radius:6px;padding:9px 11px;margin-bottom:6px}
+.fat{font-family:var(--body);font-size:12px;color:var(--silver);line-height:1.5}
+.edi{background:rgba(139,26,26,.08);border:1px solid rgba(194,34,34,.2);border-left:3px solid #c22222;border-radius:0 6px 6px 0;padding:9px 11px;margin-bottom:7px}
+.eti{font-family:var(--serif);font-size:13px;font-weight:600;color:var(--white);margin-bottom:2px}
+.edt{font-family:var(--mono);font-size:9px;color:var(--cr3);margin-bottom:4px}
+.edx{font-size:12px;color:var(--silver);line-height:1.5}
+.npi{background:var(--ink3);border:1px solid var(--ink4);border-radius:6px;padding:11px;margin-bottom:7px}
+.nph{font-family:var(--serif);font-size:14px;font-weight:600;color:var(--white);margin-bottom:4px;line-height:1.4}
+.npb{font-size:12px;color:var(--silver);line-height:1.5;margin-bottom:6px}
+.npf{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px}
+.nps{font-family:var(--mono);font-size:9px;font-weight:700;color:var(--sa3)}
+.npd{font-family:var(--mono);font-size:9px;color:var(--mist)}
+.tpill{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:4px 10px;border-radius:4px;border:1px solid var(--ink4);background:transparent;color:var(--mist);cursor:pointer;transition:all .2s}
+.tpill.on{background:rgba(200,168,75,.15);border-color:var(--gold);color:var(--gold2)}.tpill:hover:not(.on){color:var(--chalk);border-color:var(--fog)}
+.ail{text-align:center;padding:28px 0}
+.ail .sp{font-size:26px;animation:spin 2s linear infinite;display:block;margin-bottom:8px}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.ail p{font-family:var(--mono);font-size:11px;color:var(--mist);animation:bth 1.5s infinite}
+.tag{display:inline-block;background:var(--ink4);border-radius:3px;padding:1px 6px;font-family:var(--mono);font-size:9px;color:var(--smoke);letter-spacing:.04em;border:1px solid var(--fog)}
+
+/* DASHBOARD */
+.dgr{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px;margin-bottom:16px}
+.dc{background:var(--ink2);border:1px solid var(--ink4);border-radius:8px;padding:13px}
+.dn{font-family:var(--mono);font-size:26px;font-weight:700;line-height:1;margin:4px 0 2px}
+.dl{font-family:var(--mono);font-size:9px;color:var(--mist);letter-spacing:.06em;text-transform:uppercase}
+.dbar{height:3px;background:var(--ink4);border-radius:2px;margin-top:6px}
+.dfil{height:100%;border-radius:2px}
+.tc2{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:16px}
+.lc{background:var(--ink2);border:1px solid var(--ink4);border-radius:8px;padding:13px}
+.lct{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:9px;padding-bottom:5px;border-bottom:1px solid var(--ink4)}
+.lr{display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid rgba(35,43,66,.6);font-size:12px}.lr:last-child{border-bottom:none}
+.lrk{font-family:var(--mono);font-size:9px;color:var(--mist);width:18px;text-align:right;flex-shrink:0}
+
+/* INTEL */
+.ihdr{background:linear-gradient(90deg,rgba(139,26,26,.25),rgba(160,96,16,.15));border:1px solid rgba(194,34,34,.3);border-radius:8px;padding:13px 16px;margin-bottom:13px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:9px}
+.itit{font-family:var(--serif);font-size:16px;font-weight:700;color:var(--cr3)}
+.isub{font-family:var(--mono);font-size:10px;color:var(--mist);margin-top:3px}
+.ac{border-radius:7px;padding:12px 14px;margin-bottom:8px;border-left:4px solid}
+.acr{background:rgba(139,26,26,.12);border-color:#c22222;border-top:1px solid rgba(139,26,26,.25);border-right:1px solid rgba(139,26,26,.25);border-bottom:1px solid rgba(139,26,26,.25)}
+.ahg{background:rgba(180,80,0,.12);border-color:#e07030;border-top:1px solid rgba(180,80,0,.25);border-right:1px solid rgba(180,80,0,.25);border-bottom:1px solid rgba(180,80,0,.25)}
+.amd{background:rgba(160,96,16,.12);border-color:#d4831a;border-top:1px solid rgba(160,96,16,.25);border-right:1px solid rgba(160,96,16,.25);border-bottom:1px solid rgba(160,96,16,.25)}
+.alw{background:rgba(26,122,74,.1);border-color:#22a864;border-top:1px solid rgba(26,122,74,.2);border-right:1px solid rgba(26,122,74,.2);border-bottom:1px solid rgba(26,122,74,.2)}
+.asv{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:1px 5px;border-radius:3px;border:1px solid;margin-right:5px}
+.asc{background:#2c0a0a;color:var(--cr3);border-color:#c22222}.ash{background:#2c1006;color:#fb923c;border-color:#ea580c}.asm{background:#2d2000;color:#f5b544;border-color:#d4831a}.asl{background:#052e16;color:#4dcc8a;border-color:#16a34a}
+.acat{font-family:var(--mono);font-size:9px;color:var(--mist);background:var(--ink4);border:1px solid var(--fog);padding:1px 5px;border-radius:3px;text-transform:uppercase;letter-spacing:.05em}
+.aev{font-family:var(--serif);font-size:13px;font-weight:600;color:var(--white);margin:6px 0 3px}
+.asum{font-size:12px;color:var(--silver);line-height:1.6}
+.adt{font-family:var(--mono);font-size:9px;color:var(--mist)}
+.actr{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--sa3);margin-left:5px}
+
+/* SETTINGS */
+.sw{max-width:580px;margin:0 auto}
+.scard{background:var(--ink2);border:1px solid var(--ink4);border-radius:8px;padding:17px;margin-bottom:13px}
+.stit2{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.flbl2{font-family:var(--mono);font-size:10px;color:var(--silver);display:block;margin-bottom:4px}
+.finp2{background:var(--ink);border:1px solid var(--ink4);border-radius:5px;color:var(--white);padding:7px 11px;width:100%;outline:none;font-size:13px;font-family:var(--mono);margin-bottom:3px}
+.finp2:focus{border-color:var(--gold)}
+.fhnt{font-family:var(--mono);font-size:9px;color:var(--mist);line-height:1.5}
+.aw2{border-radius:6px;padding:11px;font-size:12px;line-height:1.6;margin-bottom:10px}
+.awrn{background:rgba(160,96,16,.12);border:1px solid rgba(160,96,16,.4);color:#f5b544}
+.ainf{background:rgba(26,58,122,.15);border:1px solid rgba(26,58,122,.4);color:var(--sa3)}
+.srcbar{background:var(--ink2);border:1px solid var(--ink4);border-radius:6px;padding:9px 13px;margin-top:12px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.si{font-family:var(--mono);font-size:9px;color:var(--mist)}.si span{color:var(--smoke)}
+.dstamp{font-family:var(--mono);font-size:8px;color:var(--mist);background:var(--ink3);border:1px solid var(--ink4);border-radius:3px;padding:1px 4px}
+@media(max-width:768px){.tc2{grid-template-columns:1fr}.panel{width:100vw}.finp{width:100%}.brand h1{font-size:16px}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect,useMemo,useCallback}=React;
+
+/* ════════════════════════════════════════════════════════════
+   COMPLETE COUNTRY DATABASE — All 193 UN Member States + Taiwan
+   Sources: V-Dem 2025 · Freedom House 2025 · RSF 2025
+            EIU Democracy Index 2024 · Mo Ibrahim 2024
+   Electoral columns: Presidential / Parliamentary / Semi-Presidential
+   ════════════════════════════════════════════════════════════ */
+const RAW=[
+// id,flag,country,region,leader,title,party,system,electoral,spectrum,fh,fhStatus,rsf,eiuCat,vdem_ldi,trend,erosion,ibrahim(null if N/A)
+// ── AFRICA (54) ──
+[1,"🇩🇿","Algeria","Africa","Abdelmadjid Tebboune","President","FLN / Independent","Presidential","Two-round system","Right",33,"NF",136,"Auth",0.21,"stable","critical",42.8],
+[2,"🇦🇴","Angola","Africa","João Lourenço","President","MPLA","Presidential","Party-list PR","Centre-left",32,"NF",84,"Auth",0.21,"up","high",45.6],
+[3,"🇧🇯","Benin","Africa","Patrice Talon","President","UPR","Presidential","Two-round system","Centre-right",45,"PF",113,"HR",0.33,"down","high",52.1],
+[4,"🇧🇼","Botswana","Africa","Duma Boko","President","UDC","Parliamentary","FPTP","Centre-left",72,"F",39,"FlD",0.62,"up","medium",71.2],
+[5,"🇧🇫","Burkina Faso","Africa","Ibrahim Traoré","President (Junta)","MPSR (Military)","Military Junta","No elections","Left-Nationalist",25,"NF",65,"Auth",0.15,"crisis","critical",33.4],
+[6,"🇧🇮","Burundi","Africa","Évariste Ndayishimiye","President","CNDD-FDD","Presidential","Two-round system","Centre-left",20,"NF",131,"Auth",0.18,"stable","critical",32.7],
+[7,"🇨🇻","Cabo Verde","Africa","José Maria Neves","President","PAICV","Semi-Presidential","Two-round + PR","Centre-left",91,"F",80,"FD",0.74,"stable","low",73.1],
+[8,"🇨🇲","Cameroon","Africa","Paul Biya","President","RDPC","Presidential","Two-round system","Right",22,"NF",133,"Auth",0.16,"stable","critical",38.4],
+[9,"🇨🇫","Central African Rep.","Africa","Faustin-Archange Touadéra","President","MCU","Presidential","Two-round system","Centre",22,"NF",100,"Auth",0.15,"stable","critical",24.7],
+[10,"🇹🇩","Chad","Africa","Mahamat Idriss Déby","President","MPS","Presidential","Two-round system","Right",16,"NF",118,"Auth",0.17,"stable","critical",27.1],
+[11,"🇰🇲","Comoros","Africa","Azali Assoumani","President","CRC","Presidential","Two-round system","Right",23,"NF",103,"Auth",0.26,"stable","critical",39.2],
+[12,"🇨🇬","Congo, Republic","Africa","Denis Sassou Nguesso","President","PCT","Presidential","Two-round system","Right",19,"NF",108,"Auth",0.18,"stable","critical",36.1],
+[13,"🇨🇩","Congo, DR","Africa","Félix Tshisekedi","President","UDPS","Semi-Presidential","FPTP","Centre",22,"NF",120,"Auth",0.20,"down","critical",26.4],
+[14,"🇨🇮","Côte d'Ivoire","Africa","Alassane Ouattara","President","RHDP","Presidential","Two-round system","Centre-right",35,"PF",80,"HR",0.29,"stable","high",46.8],
+[15,"🇩🇯","Djibouti","Africa","Ismail Omar Guelleh","President","RPP","Presidential","Two-round system","Right",23,"NF",123,"Auth",0.16,"stable","critical",35.4],
+[16,"🇪🇬","Egypt","Africa","Abdel Fattah el-Sisi","President","Independent (Military)","Presidential","Two-round restricted","Right",23,"NF",170,"Auth",0.08,"stable","critical",37.1],
+[17,"🇬🇶","Equatorial Guinea","Africa","Teodoro Obiang Nguema","President","PDGE","Presidential","FPTP","Right",7,"NF",155,"Auth",0.06,"stable","critical",24.2],
+[18,"🇪🇷","Eritrea","Africa","Isaias Afwerki","President","PFDJ","Single Party","No elections","Left-Nationalist",3,"NF",179,"Auth",0.03,"stable","critical",25.1],
+[19,"🇸🇿","Eswatini","Africa","King Mswati III","King","No parties","Absolute Monarchy","Hereditary","N/A",17,"NF",161,"Auth",0.09,"stable","critical",35.2],
+[20,"🇪🇹","Ethiopia","Africa","Abiy Ahmed","Prime Minister","Prosperity Party","Parliamentary","FPTP","Centre",24,"NF",125,"Auth",0.19,"down","critical",36.8],
+[21,"🇬🇦","Gabon","Africa","Brice Clotaire Oligui Nguema","President (Transitional)","CTRI (Military)","Military Transitional","No elections","Centre",23,"NF",56,"Auth",0.22,"crisis","critical",38.9],
+[22,"🇬🇲","Gambia","Africa","Adama Barrow","President","NPP","Presidential","FPTP","Centre",60,"PF",80,"HR",0.44,"stable","medium",49.7],
+[23,"🇬🇭","Ghana","Africa","John Mahama","President","NDC","Presidential","FPTP + 50%+1","Centre-left",82,"F",30,"FlD",0.60,"up","medium",62.7],
+[24,"🇬🇳","Guinea","Africa","Mamadi Doumbouya","President (Junta)","CNRD (Military)","Military Junta","No elections","N/A",13,"NF",105,"Auth",0.14,"crisis","critical",30.8],
+[25,"🇬🇼","Guinea-Bissau","Africa","Umaro Sissoco Embaló","President","Madem G15","Semi-Presidential","Two-round system","Centre-right",44,"PF",95,"HR",0.35,"stable","high",37.5],
+[26,"🇰🇪","Kenya","Africa","William Ruto","President","UDA / Kenya Kwanza","Presidential","FPTP + 25% in 24 counties","Centre-right",48,"PF",103,"HR",0.41,"down","high",49.1],
+[27,"🇱🇸","Lesotho","Africa","Sam Matekane","Prime Minister","RFP","Parliamentary Monarchy","Mixed-Member Proportional","Centre",57,"PF",72,"FlD",0.46,"stable","medium",48.6],
+[28,"🇱🇷","Liberia","Africa","Joseph Boakai","President","Unity Party","Presidential","Two-round system","Centre-left",61,"PF",73,"FlD",0.48,"up","medium",44.1],
+[29,"🇱🇾","Libya","Africa","Abdul Hamid Dbeibeh (disputed)","Prime Minister (disputed)","Independent","Divided Authority","No national elections","Centre",10,"NF",143,"Auth",0.15,"crisis","critical",21.4],
+[30,"🇲🇬","Madagascar","Africa","Andry Rajoelina","President","IRMA","Semi-Presidential","Two-round system","Centre-right",39,"PF",100,"HR",0.32,"down","high",39.6],
+[31,"🇲🇼","Malawi","Africa","Lazarus Chakwera","President","MCP","Presidential","FPTP","Centre-left",62,"F",67,"FlD",0.52,"stable","medium",50.2],
+[32,"🇲🇱","Mali","Africa","Assimi Goïta","President (Junta)","CNSP (Military)","Military Junta","No elections","Left-Nationalist",18,"NF",99,"Auth",0.14,"crisis","critical",33.3],
+[33,"🇲🇷","Mauritania","Africa","Mohamed Ould Ghazouani","President","Insaf","Presidential","Two-round system","Centre-right",29,"NF",96,"Auth",0.22,"up","high",41.7],
+[34,"🇲🇺","Mauritius","Africa","Navin Ramgoolam","Prime Minister","Labour Party","Parliamentary","FPTP","Centre-left",71,"F",64,"FlD",0.62,"up","low",76.4],
+[35,"🇲🇦","Morocco","Africa","Aziz Akhannouch / King Mohammed VI","Prime Minister","RNI","Constitutional Monarchy","Party-list PR","Centre-right",37,"PF",141,"HR",0.30,"stable","high",52.7],
+[36,"🇲🇿","Mozambique","Africa","Daniel Chapo","President","Frelimo","Presidential","FPTP","Centre-left",31,"NF",120,"Auth",0.27,"down","high",40.1],
+[37,"🇳🇦","Namibia","Africa","Netumbo Nandi-Ndaitwah","President","SWAPO","Presidential","Two-round system","Centre-left",66,"F",23,"FlD",0.57,"up","medium",61.8],
+[38,"🇳🇪","Niger","Africa","Abdourahamane Tchiani","President (Junta)","CNSP (Military)","Military Junta","No elections","N/A",21,"NF",74,"Auth",0.18,"crisis","critical",30.5],
+[39,"🇳🇬","Nigeria","Africa","Bola Ahmed Tinubu","President","APC","Presidential","FPTP + 25% in 2/3 states","Centre",43,"PF",112,"HR",0.32,"stable","high",41.2],
+[40,"🇷🇼","Rwanda","Africa","Paul Kagame","President","RPF","Presidential","Two-round system","Centre",22,"NF",124,"Auth",0.17,"stable","critical",55.1],
+[41,"🇸🇹","São Tomé & Príncipe","Africa","Carlos Vila Nova","President","ADI","Semi-Presidential","Two-round + PR","Centre-right",71,"F",77,"FlD",0.64,"stable","low",62.4],
+[42,"🇸🇳","Senegal","Africa","Bassirou Diomaye Faye","President","PASTEF","Presidential","Two-round runoff","Centre-left",72,"F",79,"FlD",0.54,"up","medium",54.3],
+[43,"🇸🇨","Seychelles","Africa","Wavel Ramkalawan","President","LDS","Presidential","Two-round system","Centre-left",71,"F",68,"FlD",0.60,"stable","low",69.2],
+[44,"🇸🇱","Sierra Leone","Africa","Julius Maada Bio","President","SLPP","Presidential","Proportional Representation","Centre-left",62,"PF",87,"FlD",0.52,"stable","medium",44.7],
+[45,"🇸🇴","Somalia","Africa","Hassan Sheikh Mohamud","President","PDP","Parliamentary (Indirect)","Clan-based indirect","Centre",9,"NF",145,"Auth",0.14,"stable","critical",22.1],
+[46,"🇿🇦","South Africa","Africa","Cyril Ramaphosa","President","ANC (GNU)","Parliamentary","Party-list PR","Centre-left",79,"F",31,"FlD",0.53,"stable","medium",55.8],
+[47,"🇸🇸","South Sudan","Africa","Salva Kiir Mayardit","President","SPLM","Presidential (Transitional)","No elections since 2011","Centre",4,"NF",144,"Auth",0.08,"crisis","critical",18.6],
+[48,"🇸🇩","Sudan","Africa","Abdel Fattah al-Burhan","Head of State (Junta)","SAF (Military)","Military Junta","No elections — civil war","Right",4,"NF",156,"Auth",0.04,"crisis","critical",18.2],
+[49,"🇹🇿","Tanzania","Africa","Samia Suluhu Hassan","President","CCM","Presidential","FPTP","Centre-left",37,"NF",111,"Auth",0.26,"up","high",47.3],
+[50,"🇹🇬","Togo","Africa","Faure Gnassingbé","President","UNIR","Presidential","Two-round system","Right",20,"NF",115,"Auth",0.20,"stable","critical",41.3],
+[51,"🇹🇳","Tunisia","Africa","Kais Saied","President","Independent","Presidential (Post-coup)","Two-round restricted","Right-Populist",26,"NF",118,"Auth",0.10,"down","critical",null],
+[52,"🇺🇬","Uganda","Africa","Yoweri Museveni","President","NRM","Presidential","FPTP","Right",35,"NF",130,"Auth",0.27,"stable","high",41.6],
+[53,"🇿🇲","Zambia","Africa","Hakainde Hichilema","President","UPND","Presidential","FPTP","Centre-right",70,"F",95,"FlD",0.55,"up","medium",53.6],
+[54,"🇿🇼","Zimbabwe","Africa","Emmerson Mnangagwa","President","ZANU-PF","Presidential","FPTP","Centre-left",30,"NF",126,"Auth",0.24,"stable","high",34.7],
+// ── AMERICAS (35) ──
+[55,"🇦🇬","Antigua & Barbuda","Americas","Gaston Browne","Prime Minister","ALP","Parliamentary Monarchy","FPTP","Centre-left",90,"F",24,"FlD",0.66,"stable","low",null],
+[56,"🇦🇷","Argentina","Americas","Javier Milei","President","La Libertad Avanza","Presidential","Two-round runoff","Far-right",66,"F",87,"FlD",0.60,"down","medium",null],
+[57,"🇧🇸","Bahamas","Americas","Philip Davis","Prime Minister","PLP","Parliamentary Monarchy","FPTP","Centre-left",92,"F",28,"FlD",0.70,"stable","low",null],
+[58,"🇧🇧","Barbados","Americas","Mia Mottley","Prime Minister","BLP","Parliamentary","FPTP","Centre-left",98,"F",21,"FD",0.78,"stable","low",null],
+[59,"🇧🇿","Belize","Americas","John Briceño","Prime Minister","PUP","Parliamentary Monarchy","FPTP","Centre-left",83,"F",42,"FlD",0.62,"stable","low",null],
+[60,"🇧🇴","Bolivia","Americas","Luis Arce","President","MAS-IPSP","Presidential","Absolute majority","Left",30,"PF",42,"HR",0.36,"stable","high",null],
+[61,"🇧🇷","Brazil","Americas","Luiz Inácio Lula da Silva","President","PT (Workers' Party)","Presidential","Two-round runoff","Left",73,"F",103,"FlD",0.54,"stable","medium",null],
+[62,"🇨🇦","Canada","Americas","Mark Carney","Prime Minister","Liberal Party","Parliamentary Monarchy","FPTP","Centre-left",98,"F",14,"FD",0.85,"stable","low",null],
+[63,"🇨🇱","Chile","Americas","Gabriel Boric","President","Frente Amplio","Presidential","Two-round runoff","Left",96,"F",33,"FD",0.80,"stable","low",null],
+[64,"🇨🇴","Colombia","Americas","Gustavo Petro","President","Pacto Histórico","Presidential","Two-round runoff","Left",66,"F",134,"FlD",0.52,"down","medium",null],
+[65,"🇨🇷","Costa Rica","Americas","Rodrigo Chaves","President","PPSD","Presidential","Two-round runoff","Right",88,"F",55,"FlD",0.70,"stable","low",null],
+[66,"🇨🇺","Cuba","Americas","Miguel Díaz-Canel","President","PCC","Single Party","Single-party indirect","Far-left",13,"NF",172,"Auth",0.04,"stable","critical",null],
+[67,"🇩🇲","Dominica","Americas","Roosevelt Skerrit","Prime Minister","DLP","Parliamentary","FPTP","Centre-left",83,"F",26,"FlD",0.65,"stable","low",null],
+[68,"🇩🇴","Dominican Republic","Americas","Luis Abinader","President","PRM","Presidential","Two-round runoff","Centre-right",68,"F",110,"FlD",0.51,"stable","medium",null],
+[69,"🇪🇨","Ecuador","Americas","Daniel Noboa","President","ADN","Presidential","Two-round runoff","Centre-right",57,"PF",93,"HR",0.47,"stable","medium",null],
+[70,"🇸🇻","El Salvador","Americas","Nayib Bukele","President","Nuevas Ideas","Presidential","FPTP majority","Right",33,"NF",115,"Auth",0.31,"down","critical",null],
+[71,"🇬🇩","Grenada","Americas","Dickon Mitchell","Prime Minister","NDC","Parliamentary Monarchy","FPTP","Centre-left",86,"F",21,"FlD",0.68,"stable","low",null],
+[72,"🇬🇹","Guatemala","Americas","Bernardo Arévalo","President","Semilla","Presidential","Two-round runoff","Centre-left",54,"PF",128,"HR",0.42,"up","medium",null],
+[73,"🇬🇾","Guyana","Americas","Irfaan Ali","President","PPP/C","Presidential","Party-list PR","Centre-left",73,"F",100,"FlD",0.50,"stable","medium",null],
+[74,"🇭🇹","Haiti","Americas","Alix Didier Fils-Aimé (PM, Transitional)","Prime Minister (Transitional)","N/A","Transitional","No elections","N/A",26,"NF",80,"Auth",0.16,"crisis","critical",null],
+[75,"🇭🇳","Honduras","Americas","Xiomara Castro","President","Libre Party","Presidential","FPTP","Left",42,"PF",138,"HR",0.38,"stable","high",null],
+[76,"🇯🇲","Jamaica","Americas","Andrew Holness","Prime Minister","JLP","Parliamentary Monarchy","FPTP","Centre-right",78,"F",45,"FlD",0.58,"stable","low",null],
+[77,"🇲🇽","Mexico","Americas","Claudia Sheinbaum","President","Morena","Presidential","FPTP single round","Left",52,"PF",124,"HR",0.44,"down","high",null],
+[78,"🇳🇮","Nicaragua","Americas","Daniel Ortega","President","FSLN","Presidential (Authoritarian)","FPTP non-competitive","Left",12,"NF",161,"Auth",0.05,"stable","critical",null],
+[79,"🇵🇦","Panama","Americas","José Raúl Mulino","President","Realizando Metas","Presidential","FPTP","Right",76,"F",89,"FlD",0.57,"stable","medium",null],
+[80,"🇵🇾","Paraguay","Americas","Santiago Peña","President","Colorado Party (ANR)","Presidential","FPTP","Right",37,"PF",106,"HR",0.35,"stable","high",null],
+[81,"🇵🇪","Peru","Americas","Dina Boluarte","President","Independent","Presidential","Two-round system","Centre",63,"PF",120,"HR",0.43,"down","high",null],
+[82,"🇰🇳","Saint Kitts & Nevis","Americas","Terrance Drew","Prime Minister","SKNLP","Parliamentary Monarchy","FPTP","Centre-left",89,"F",29,"FlD",0.68,"stable","low",null],
+[83,"🇱🇨","Saint Lucia","Americas","Philip Pierre","Prime Minister","SLP","Parliamentary Monarchy","FPTP","Centre-left",92,"F",18,"FlD",0.72,"stable","low",null],
+[84,"🇻🇨","Saint Vincent & Grenadines","Americas","Ralph Gonsalves","Prime Minister","ULP","Parliamentary Monarchy","FPTP","Centre-left",91,"F",22,"FlD",0.70,"stable","low",null],
+[85,"🇸🇷","Suriname","Americas","Chan Santokhi","President","VHP","Presidential","Party-list PR (indirect)","Centre-right",71,"F",64,"FlD",0.52,"stable","medium",null],
+[86,"🇹🇹","Trinidad & Tobago","Americas","Stuart Young","Prime Minister","PNM","Parliamentary","FPTP","Centre-right",76,"F",55,"FlD",0.58,"stable","low",null],
+[87,"🇺🇸","United States","Americas","Donald J. Trump","President","Republican Party","Presidential","Electoral College / FPTP","Right",83,"F",57,"FlD",0.72,"down","medium",null],
+[88,"🇺🇾","Uruguay","Americas","Yamandú Orsi","President","Frente Amplio","Presidential","Two-round runoff","Left",95,"F",30,"FD",0.82,"up","low",null],
+[89,"🇻🇪","Venezuela","Americas","Nicolás Maduro","President","PSUV","Presidential (Authoritarian)","FPTP non-competitive","Left",14,"NF",159,"Auth",0.07,"crisis","critical",null],
+// ── ASIA (48 + Turkey) ──
+[90,"🇦🇫","Afghanistan","Asia","Hibatullah Akhundzada","Supreme Leader","Taliban","Theocratic Emirate","No elections","Far-right",5,"NF",178,"Auth",0.03,"crisis","critical",null],
+[91,"🇦🇲","Armenia","Asia","Nikol Pashinyan","Prime Minister","Civil Contract","Parliamentary","Party-list PR","Centre-left",67,"F",80,"FlD",0.55,"stable","medium",null],
+[92,"🇦🇿","Azerbaijan","Asia","Ilham Aliyev","President","YAP","Presidential","Two-round system","Right",10,"NF",164,"Auth",0.13,"stable","critical",null],
+[93,"🇧🇭","Bahrain","Asia","King Hamad bin Isa Al Khalifa","King","No parties","Constitutional Monarchy","No political parties","N/A",12,"NF",165,"Auth",0.11,"stable","critical",null],
+[94,"🇧🇩","Bangladesh","Asia","Muhammad Yunus (Interim)","Chief Adviser","Independent","Parliamentary (Interim)","Caretaker government","Centre",40,"PF",165,"HR",0.24,"down","high",null],
+[95,"🇧🇹","Bhutan","Asia","Tshering Tobgay","Prime Minister","PDP","Constitutional Monarchy","Two-round FPTP","Centre",66,"F",90,"FlD",0.52,"stable","medium",null],
+[96,"🇧🇳","Brunei","Asia","Sultan Hassanal Bolkiah","Sultan & PM","No parties","Absolute Monarchy","No elections","N/A",21,"NF",138,"Auth",0.08,"stable","critical",null],
+[97,"🇰🇭","Cambodia","Asia","Hun Manet","Prime Minister","CPP","Parliamentary (Dominant party)","Party-list PR","Right",24,"NF",151,"Auth",0.15,"stable","critical",null],
+[98,"🇨🇳","China","Asia","Xi Jinping","President / General Secretary","CCP","Single Party","NPC indirect","Left-Nationalist",9,"NF",172,"Auth",0.06,"stable","critical",null],
+[99,"🇨🇾","Cyprus","Asia","Nikos Christodoulides","President","Independent (DIKO-backed)","Presidential","Two-round system","Centre-right",83,"F",66,"FlD",0.65,"stable","medium",null],
+[100,"🇬🇪","Georgia","Asia","Mikheil Kavelashvili","President","Georgian Dream","Parliamentary","Party-list PR","Right",61,"PF",103,"HR",0.42,"down","high",null],
+[101,"🇮🇳","India","Asia","Narendra Modi","Prime Minister","BJP / NDA","Parliamentary","FPTP","Right",66,"F",151,"FlD",0.32,"down","medium",null],
+[102,"🇮🇩","Indonesia","Asia","Prabowo Subianto","President","Gerindra","Presidential","FPTP single round","Right",52,"PF",111,"HR",0.44,"stable","medium",null],
+[103,"🇮🇷","Iran","Asia","Masoud Pezeshkian","President","Reformist Front","Presidential (Supreme Leader above)","Vetted two-round system","Centre-left",16,"NF",176,"Auth",0.07,"stable","critical",null],
+[104,"🇮🇶","Iraq","Asia","Mohammed Shia' Al-Sudani","Prime Minister","State of Law Coalition","Parliamentary","SNTV-PR","Centre",29,"NF",155,"Auth",0.21,"stable","high",null],
+[105,"🇮🇱","Israel","Asia","Benjamin Netanyahu","Prime Minister","Likud","Parliamentary","Closed-list PR","Right",76,"F",97,"FlD",0.59,"down","medium",null],
+[106,"🇯🇵","Japan","Asia","Shigeru Ishiba","Prime Minister","LDP","Parliamentary","Mixed (FPTP + PR)","Centre-right",96,"F",68,"FD",0.76,"stable","low",null],
+[107,"🇯🇴","Jordan","Asia","King Abdullah II / PM Jafar Hassan","King","No parties (Parliament exists)","Constitutional Monarchy","Block voting","Centre",37,"PF",112,"HR",0.26,"stable","high",null],
+[108,"🇰🇿","Kazakhstan","Asia","Kassym-Jomart Tokayev","President","Amanat","Presidential","Two-round system","Centre",23,"NF",142,"Auth",0.17,"stable","critical",null],
+[109,"🇰🇼","Kuwait","Asia","Sheikh Meshal Al-Ahmad Al-Sabah","Emir","No parties","Constitutional Monarchy","Block voting (Parliament)","N/A",24,"NF",150,"Auth",0.22,"stable","critical",null],
+[110,"🇰🇬","Kyrgyzstan","Asia","Sadyr Japarov","President","Mekenchil","Presidential","Two-round system","Right",32,"NF",134,"Auth",0.25,"stable","high",null],
+[111,"🇱🇦","Laos","Asia","Sonexay Siphandon","Prime Minister","LPRP","Single Party","Single-party FPTP","Left",14,"NF",164,"Auth",0.09,"stable","critical",null],
+[112,"🇱🇧","Lebanon","Asia","Joseph Aoun","President","Independent","Semi-Presidential","Confessional PR","Centre",38,"PF",130,"HR",0.31,"up","high",null],
+[113,"🇲🇾","Malaysia","Asia","Anwar Ibrahim","Prime Minister","PKR / Pakatan Harapan","Parliamentary Monarchy","FPTP","Centre-left",44,"PF",107,"HR",0.38,"stable","medium",null],
+[114,"🇲🇻","Maldives","Asia","Mohamed Muizzu","President","PPM/PNC","Presidential","Two-round system","Right",35,"PF",100,"HR",0.33,"stable","high",null],
+[115,"🇲🇳","Mongolia","Asia","Ukhnaagiin Khürelsükh","President","MPP","Semi-Presidential","FPTP","Centre-left",62,"PF",95,"HR",0.48,"stable","medium",null],
+[116,"🇲🇲","Myanmar","Asia","Min Aung Hlaing","PM / Junta Head","SAC (Military)","Military Junta","No elections — coup","Right",10,"NF",174,"Auth",0.05,"crisis","critical",null],
+[117,"🇳🇵","Nepal","Asia","KP Sharma Oli","Prime Minister","CPN-UML","Parliamentary","Mixed (FPTP + PR)","Left",46,"PF",100,"HR",0.38,"stable","high",null],
+[118,"🇰🇵","North Korea","Asia","Kim Jong-un","Supreme Leader","KWP","Single Party Dictatorship","Sham 100% elections","Far-left",3,"NF",180,"Auth",0.01,"stable","critical",null],
+[119,"🇴🇲","Oman","Asia","Sultan Haitham bin Tariq","Sultan","No parties","Absolute Monarchy","No elections","N/A",22,"NF",135,"Auth",0.10,"stable","critical",null],
+[120,"🇵🇰","Pakistan","Asia","Shehbaz Sharif","Prime Minister","PML-N","Parliamentary","FPTP","Centre-right",37,"PF",152,"HR",0.28,"stable","high",null],
+[121,"🇵🇭","Philippines","Asia","Ferdinand Marcos Jr.","President","PFP / UniTeam","Presidential","FPTP plurality","Centre-right",55,"PF",134,"HR",0.36,"stable","medium",null],
+[122,"🇶🇦","Qatar","Asia","Emir Tamim bin Hamad Al Thani","Emir","No parties","Absolute Monarchy","No elections","N/A",25,"NF",128,"Auth",0.12,"stable","critical",null],
+[123,"🇸🇦","Saudi Arabia","Asia","King Salman / Crown Prince MBS","King","Al Saud dynasty","Absolute Monarchy","No elections","N/A",7,"NF",166,"Auth",0.04,"stable","critical",null],
+[124,"🇸🇬","Singapore","Asia","Lawrence Wong","Prime Minister","PAP","Parliamentary","FPTP / GRC","Centre",47,"PF",140,"HR",0.36,"stable","medium",null],
+[125,"🇰🇷","South Korea","Asia","Lee Jae-myung","President","Democratic Party","Presidential","Two-round runoff","Centre-left",83,"F",62,"FD",0.74,"up","low",null],
+[126,"🇱🇰","Sri Lanka","Asia","Anura Kumara Dissanayake","President","NPP / JVP","Semi-Presidential","Preferential voting","Left",56,"PF",68,"HR",0.44,"up","medium",null],
+[127,"🇸🇾","Syria","Asia","Ahmad al-Sharaa","President (Transitional)","HTS / General Command","Transitional","No elections","Right-Islamist",13,"NF",155,"Auth",0.07,"crisis","critical",null],
+[128,"🇹🇼","Taiwan","Asia","Lai Ching-te","President","DPP","Semi-Presidential","Two-round system","Centre-left",94,"F",35,"FD",0.84,"stable","low",null],
+[129,"🇹🇯","Tajikistan","Asia","Emomali Rahmon","President","PDPT","Presidential (Authoritarian)","Two-round non-competitive","Right",7,"NF",163,"Auth",0.07,"stable","critical",null],
+[130,"🇹🇭","Thailand","Asia","Paetongtarn Shinawatra","Prime Minister","Pheu Thai","Parliamentary (Constitutional Monarchy)","Mixed (FPTP + PR)","Centre",57,"PF",85,"HR",0.29,"stable","medium",null],
+[131,"🇹🇱","Timor-Leste","Asia","Xanana Gusmão","Prime Minister","CNRT","Semi-Presidential","D'Hondt PR","Centre-right",61,"F",100,"FlD",0.47,"stable","medium",null],
+[132,"🇹🇲","Turkmenistan","Asia","Serdar Berdimuhamedov","President","DPT","Presidential (Authoritarian)","Non-competitive","Right",4,"NF",175,"Auth",0.04,"stable","critical",null],
+[133,"🇹🇷","Turkey","Asia","Recep Tayyip Erdoğan","President","AKP","Presidential","Two-round runoff","Right",34,"PF",158,"HR",0.19,"down","high",null],
+[134,"🇦🇪","UAE","Asia","Sheikh Mohamed bin Zayed Al Nahyan","President","No parties (Al Nahyan)","Federal Constitutional Monarchy","Federal Council indirect","N/A",18,"NF",148,"Auth",0.10,"stable","critical",null],
+[135,"🇺🇿","Uzbekistan","Asia","Shavkat Mirziyoyev","President","UzLiDeP","Presidential","Two-round system","Right",3,"NF",158,"Auth",0.07,"stable","critical",null],
+[136,"🇻🇳","Vietnam","Asia","Tô Lâm","Gen. Secretary / President","CPV","Single Party","Single-party NPC indirect","Left",19,"NF",174,"Auth",0.09,"stable","critical",null],
+[137,"🇾🇪","Yemen","Asia","Rashad al-Alimi (PLC)","President (Transitional)","GPC / Coalition","Transitional","Appointed","Centre",10,"NF",168,"Auth",0.06,"crisis","critical",null],
+// ── EUROPE (44) ──
+[138,"🇦🇱","Albania","Europe","Edi Rama","Prime Minister","PS (Socialist Party)","Parliamentary","Party-list PR","Centre-left",67,"F",80,"FlD",0.58,"up","medium",null],
+[139,"🇦🇩","Andorra","Europe","Xavier Espot Zamora","PM (Cap de Govern)","Democrats for Andorra","Parliamentary Co-Principality","Two-round mixed","Centre-right",90,"F",50,"FlD",0.74,"stable","low",null],
+[140,"🇦🇹","Austria","Europe","Herbert Kickl","Chancellor","FPÖ","Parliamentary","Party-list PR","Far-right",82,"F",32,"FlD",0.75,"down","medium",null],
+[141,"🇧🇾","Belarus","Europe","Alexander Lukashenko","President","Independent","Presidential (Authoritarian)","Non-competitive","Right",11,"NF",157,"Auth",0.06,"stable","critical",null],
+[142,"🇧🇪","Belgium","Europe","Bart De Wever","Prime Minister","N-VA","Parliamentary Monarchy","Party-list PR","Centre-right",96,"F",9,"FD",0.85,"stable","low",null],
+[143,"🇧🇦","Bosnia & Herzegovina","Europe","Denis Bećirović / Ž. Komšić / N. Radmanović","Presidency (Rotating)","SDP / DF / SNSD","Parliamentary (Rotating)","Entity-based FPTP","Centre/Right",54,"PF",97,"HR",0.50,"down","high",null],
+[144,"🇧🇬","Bulgaria","Europe","Rosen Zhelyazkov","Prime Minister","GERB","Parliamentary","Party-list PR","Centre-right",65,"F",60,"FlD",0.57,"stable","medium",null],
+[145,"🇭🇷","Croatia","Europe","Andrej Plenković","Prime Minister","HDZ","Parliamentary","D'Hondt PR","Centre-right",74,"F",54,"FlD",0.62,"stable","medium",null],
+[146,"🇨🇿","Czech Republic","Europe","Petr Fiala","Prime Minister","ODS / SPOLU","Parliamentary","Party-list PR","Centre-right",90,"F",24,"FlD",0.77,"up","low",null],
+[147,"🇩🇰","Denmark","Europe","Mette Frederiksen","Prime Minister","Social Democrats","Parliamentary Monarchy","Party-list PR","Centre-left",97,"F",4,"FD",0.90,"stable","low",null],
+[148,"🇪🇪","Estonia","Europe","Kristen Michal","Prime Minister","Reform Party","Parliamentary","Party-list PR (open list)","Centre-right",95,"F",6,"FD",0.87,"stable","low",null],
+[149,"🇫🇮","Finland","Europe","Petteri Orpo","Prime Minister","NCP (Kokoomus)","Parliamentary","D'Hondt PR (open list)","Centre-right",100,"F",5,"FD",0.91,"stable","low",null],
+[150,"🇫🇷","France","Europe","Emmanuel Macron / François Bayrou (PM)","President","Renaissance / MoDem","Semi-Presidential","Two-round system","Centre",90,"F",21,"FD",0.76,"stable","low",null],
+[151,"🇩🇪","Germany","Europe","Friedrich Merz","Chancellor","CDU/CSU","Parliamentary","Mixed-Member Proportional","Centre-right",94,"F",10,"FD",0.84,"stable","low",null],
+[152,"🇬🇷","Greece","Europe","Kyriakos Mitsotakis","Prime Minister","New Democracy","Parliamentary","Reinforced PR","Centre-right",87,"F",35,"FlD",0.74,"stable","low",null],
+[153,"🇭🇺","Hungary","Europe","Viktor Orbán","Prime Minister","Fidesz","Parliamentary","Mixed (FPTP + PR, gerrymandered)","Right",66,"F",67,"HR",0.38,"down","high",null],
+[154,"🇮🇸","Iceland","Europe","Bjarni Benediktsson","Prime Minister","Independence Party","Parliamentary","D'Hondt PR","Centre-right",95,"F",15,"FD",0.87,"stable","low",null],
+[155,"🇮🇪","Ireland","Europe","Micheál Martin","Taoiseach","Fianna Fáil","Parliamentary","STV-PR","Centre-right",97,"F",7,"FD",0.88,"stable","low",null],
+[156,"🇮🇹","Italy","Europe","Giorgia Meloni","Prime Minister","Brothers of Italy (FdI)","Parliamentary","Mixed (FPTP + PR)","Right",75,"F",46,"FlD",0.71,"down","medium",null],
+[157,"🇽🇰","Kosovo","Europe","Albin Kurti","Prime Minister","Vetevendosje","Parliamentary","Party-list PR","Centre-left",52,"PF",84,"HR",0.44,"stable","medium",null],
+[158,"🇱🇻","Latvia","Europe","Evika Siliņa","Prime Minister","New Unity (JV)","Parliamentary","Party-list PR","Centre-right",89,"F",22,"FlD",0.78,"stable","low",null],
+[159,"🇱🇮","Liechtenstein","Europe","Daniel Risch","Prime Minister","VU (Patriotic Union)","Constitutional Monarchy","Party-list PR","Centre-right",97,"F",11,"FD",0.85,"stable","low",null],
+[160,"🇱🇹","Lithuania","Europe","Saulius Skvernelis","Prime Minister","Democratic Party (LDP)","Parliamentary","Mixed (FPTP + PR)","Centre-left",91,"F",28,"FD",0.82,"stable","low",null],
+[161,"🇱🇺","Luxembourg","Europe","Luc Frieden","Prime Minister","CSV","Parliamentary Monarchy","Party-list PR","Centre-right",97,"F",16,"FD",0.84,"stable","low",null],
+[162,"🇲🇹","Malta","Europe","Robert Abela","Prime Minister","Labour Party (MLP)","Parliamentary","STV-PR","Centre-left",93,"F",27,"FD",0.80,"stable","low",null],
+[163,"🇲🇩","Moldova","Europe","Maia Sandu","President","PAS","Semi-Presidential","Two-round system","Centre-right",60,"PF",36,"HR",0.50,"up","medium",null],
+[164,"🇲🇨","Monaco","Europe","Prince Albert II","Prince","No parties","Constitutional Monarchy","No parties","N/A",88,"F",22,"FlD",0.75,"stable","low",null],
+[165,"🇲🇪","Montenegro","Europe","Milojko Spajić","Prime Minister","Europe Now! (PES)","Parliamentary","Party-list PR","Centre",65,"F",65,"FlD",0.56,"up","medium",null],
+[166,"🇳🇱","Netherlands","Europe","Dick Schoof","Prime Minister","Independent (VVD/PVV coalition)","Parliamentary Monarchy","D'Hondt PR","Right",98,"F",8,"FD",0.88,"down","low",null],
+[167,"🇲🇰","North Macedonia","Europe","Hristijan Mickoski","Prime Minister","VMRO-DPMNE","Parliamentary","Party-list PR","Right",52,"PF",93,"HR",0.44,"up","medium",null],
+[168,"🇳🇴","Norway","Europe","Jonas Gahr Støre","Prime Minister","Labour Party","Parliamentary Monarchy","Sainte-Laguë PR","Centre-left",100,"F",2,"FD",0.91,"stable","low",null],
+[169,"🇵🇱","Poland","Europe","Donald Tusk","Prime Minister","Civic Coalition","Parliamentary","D'Hondt PR","Centre",85,"F",47,"FlD",0.71,"up","low",null],
+[170,"🇵🇹","Portugal","Europe","Luís Montenegro","Prime Minister","PSD / Democratic Alliance","Semi-Presidential","D'Hondt PR","Centre-right",87,"F",25,"FlD",0.75,"stable","low",null],
+[171,"🇷🇴","Romania","Europe","Nicușor Dan","President","Independent / USR-backed","Semi-Presidential","Two-round system","Centre-right",65,"F",49,"FlD",0.55,"up","medium",null],
+[172,"🇷🇺","Russia","Europe","Vladimir Putin","President","United Russia","Presidential","Two-round non-competitive","Right",9,"NF",164,"Auth",0.08,"crisis","critical",null],
+[173,"🇸🇲","San Marino","Europe","Rotating Captains Regent","Captains Regent","Various (coalition)","Parliamentary Republic","Party-list PR","Centre",96,"F",12,"FD",0.82,"stable","low",null],
+[174,"🇷🇸","Serbia","Europe","Aleksandar Vučić","President","SNS","Semi-Presidential","Two-round system","Right",34,"PF",98,"HR",0.30,"down","high",null],
+[175,"🇸🇰","Slovakia","Europe","Robert Fico","Prime Minister","Smer","Parliamentary","Party-list PR","Left-Populist",50,"PF",33,"HR",0.50,"down","high",null],
+[176,"🇸🇮","Slovenia","Europe","Robert Golob","Prime Minister","Freedom Movement (GS)","Parliamentary","D'Hondt PR","Centre-left",92,"F",48,"FD",0.79,"stable","low",null],
+[177,"🇪🇸","Spain","Europe","Pedro Sánchez","Prime Minister","PSOE","Parliamentary Monarchy","D'Hondt PR","Centre-left",90,"F",30,"FD",0.79,"down","low",null],
+[178,"🇸🇪","Sweden","Europe","Ulf Kristersson","Prime Minister","Moderate Party","Parliamentary Monarchy","Sainte-Laguë PR","Centre-right",100,"F",3,"FD",0.87,"stable","low",null],
+[179,"🇨🇭","Switzerland","Europe","Karin Keller-Sutter (2025 President)","Federal Council President","FDP","Federal Council / Direct Democracy","Mixed PR + Direct Democracy","Centre-right",96,"F",16,"FD",0.88,"stable","low",null],
+[180,"🇺🇦","Ukraine","Europe","Volodymyr Zelensky","President","Servant of the People","Presidential","Two-round (wartime extended)","Centre",61,"PF",62,"HR",0.61,"crisis","high",null],
+[181,"🇬🇧","United Kingdom","Europe","Keir Starmer","Prime Minister","Labour Party","Parliamentary Monarchy","FPTP","Centre-left",93,"F",23,"FD",0.82,"stable","low",null],
+[182,"🇻🇦","Vatican City","Europe","Pope Francis","Pope (Head of State)","Holy See","Theocratic Elective Monarchy","Papal Conclave","N/A",80,"F",12,"FlD",0.65,"stable","low",null],
+// ── OCEANIA (14) ──
+[183,"🇦🇺","Australia","Oceania","Anthony Albanese","Prime Minister","Australian Labor Party","Parliamentary Monarchy","Preferential Voting (IRV)","Centre-left",97,"F",29,"FD",0.83,"stable","low",null],
+[184,"🇫🇯","Fiji","Oceania","Sitiveni Rabuka","Prime Minister","People's Alliance","Parliamentary","Party-list PR","Centre-right",64,"F",52,"FlD",0.55,"stable","medium",null],
+[185,"🇰🇮","Kiribati","Oceania","Taneti Maamau","President","TKB","Presidential","Two-round FPTP","Centre",67,"F",85,"FlD",0.48,"stable","medium",null],
+[186,"🇲🇭","Marshall Islands","Oceania","Hilda Heine","President","Independent","Parliamentary (Parliament elects)","FPTP + indirect","Centre",88,"F",32,"FlD",0.65,"stable","low",null],
+[187,"🇫🇲","Micronesia","Oceania","Wesley Simina","President","Independent","Presidential (Congress elects)","FPTP indirect","Centre",87,"F",0,"FlD",0.60,"stable","low",null],
+[188,"🇳🇷","Nauru","Oceania","David Adeang","President","Independent","Parliamentary (Parliament elects)","Borda count","Centre",85,"F",55,"FlD",0.62,"stable","low",null],
+[189,"🇳🇿","New Zealand","Oceania","Christopher Luxon","Prime Minister","National Party","Parliamentary Monarchy","Mixed-Member Proportional","Centre-right",99,"F",13,"FD",0.89,"stable","low",null],
+[190,"🇵🇼","Palau","Oceania","Surangel Whipps Jr.","President","Independent","Presidential","FPTP","Centre-right",88,"F",50,"FlD",0.67,"stable","low",null],
+[191,"🇵🇬","Papua New Guinea","Oceania","James Marape","Prime Minister","Pangu Party","Parliamentary Monarchy","Limited preferential voting","Centre",57,"PF",74,"HR",0.44,"stable","medium",null],
+[192,"🇼🇸","Samoa","Oceania","Fiame Naomi Mata'afa","Prime Minister","FAST","Parliamentary","FPTP","Centre-left",73,"F",62,"FlD",0.55,"stable","medium",null],
+[193,"🇸🇧","Solomon Islands","Oceania","Jeremiah Manele","Prime Minister","OUR Solomon Islands","Parliamentary Monarchy","FPTP","Centre",66,"F",68,"FlD",0.50,"stable","medium",null],
+[194,"🇹🇴","Tonga","Oceania","Aisake Eke","Prime Minister","Independent","Constitutional Monarchy","FPTP (commoner seats)","Centre",67,"F",90,"FlD",0.48,"stable","medium",null],
+[195,"🇹🇻","Tuvalu","Oceania","Feleti Teo","PM / Head of Government","Independent","Parliamentary Monarchy","FPTP","Centre",82,"F",70,"FlD",0.55,"stable","low",null],
+[196,"🇻🇺","Vanuatu","Oceania","Charlot Salwai","Prime Minister","RMC","Parliamentary","SNTV","Centre-right",63,"F",72,"FlD",0.48,"stable","medium",null],
+];
+
+// Convert flat array to objects
+const COUNTRIES=RAW.map(r=>({
+  id:r[0],flag:r[1],country:r[2],region:r[3],leader:r[4],title:r[5],party:r[6],
+  system:r[7],electoral:r[8],spectrum:r[9],fh:r[10],fhStatus:r[11],rsf:r[12],
+  eiuCat:r[13],vdem_ldi:r[14],trend:r[15],erosion:r[16],ibrahim:r[17]
+}));
+
+/* ── Key erosion actions by country ID (top examples) ── */
+const EROSION_ACTIONS={
+  1:[{t:"2024 election — 94.65% result condemned",d:"Sep 2024",x:"Independent observers barred; Hirak activists imprisoned; result defies credibility in any genuine competition."},{t:"100+ political prisoners; Hirak movement suppressed",d:"2019–25",x:"Mass arrests following pro-democracy protests; journalists sentenced for social media posts."}],
+  5:[{t:"Two military coups in 8 months (2022)",d:"Jan–Sep 2022",x:"Traoré's second coup ousted first coup leader; expelled French forces; invited Wagner Group."},{t:"Journalists killed, media banned",d:"2022–25",x:"Foreign journalists expelled; BBC and VOA suspended; internet cut during operations."}],
+  8:[{t:"Anglophone Crisis — 6,000+ killed",d:"2017–25",x:"Government's violent response to English-speaking protesters created separatist conflict."},{t:"17-month internet shutdown in Anglophone regions",d:"2017–18",x:"Longest internet shutdown in African history at the time."}],
+  13:[{t:"M23/Rwanda-backed rebel seizure of Goma",d:"Jan 2025",x:"7M+ displaced; Rwanda-backed rebels seized DRC's second city."},{t:"2023 election condemned by CENCO bishops",d:"Dec 2023",x:"Electoral commission failures; Catholic bishops refused to validate results."}],
+  16:[{t:"60,000+ political prisoners",d:"2013–25",x:"Emergency Law applied continuously; terrorism charges for social media."},{t:"Constitutional amendments extending rule to 2030",d:"2019",x:"Sham referendum extended terms; gave military constitutional role."}],
+  20:[{t:"Tigray War — 500,000+ killed, starvation weaponized",d:"2020–22",x:"UN investigators cited crimes against humanity by all parties; Nobel laureate commanded conflict."},{t:"Ongoing conflict in Amhara and Oromia",d:"2023–25",x:"Internet shutdowns; opposition imprisoned; humanitarian access blocked."}],
+  26:[{t:"Security forces killed 39+ during #RejectFinanceBill2024",d:"Jun 2024",x:"Police used live rounds; government initially denied responsibility."},{t:"Enforced disappearances of youth protest leaders",d:"2024–25",x:"UN Special Rapporteur raised formal concern; bodies found."}],
+  32:[{t:"Expelled French, UN, EU missions; invited Wagner Group",d:"2022–23",x:"MINUSMA (15,000 peacekeepers) expelled; replaced with Wagner mercenaries."},{t:"Elections indefinitely postponed; political parties banned",d:"2022–25",x:"Junta repeatedly delayed 2024 elections; banned party meetings."}],
+  36:[{t:"300+ killed in post-2024 election protests",d:"Oct 2024–Feb 2025",x:"Security forces used live ammunition against demonstrators; internet shutdowns."}],
+  48:[{t:"SAF–RSF civil war — genocidal violence in Darfur",d:"Apr 2023–present",x:"150,000+ killed; 10M+ displaced; UN-documented genocide in Darfur."}],
+  51:[{t:"2021 self-coup: parliament dissolved, constitution suspended",d:"Jul 25, 2021",x:"Saied invoked emergency powers; suspended parliament; governed by decree."},{t:"2022 constitution eliminates all checks on president",d:"Jul 2022",x:"30.5% voter turnout referendum ratified constitution removing judicial independence."},{t:"Mass arrest of judges, opposition, and journalists",d:"2022–25",x:"57 judges sacked by decree; opposition leaders imprisoned."}],
+  70:[{t:"Judicial capture: replaced all courts with loyalists",d:"2021–24",x:"Bukele removed all Supreme Court justices and replaced them with allies; overrode constitution."},{t:"Mass imprisonment in CECOT mega-prison",d:"2023–25",x:"77,000+ imprisoned without trial in world's largest prison; UN Human Rights criticism."}],
+  78:[{t:"Imprisoned all 2021 presidential candidates before election",d:"2021",x:"7 viable candidates arrested; later stripped of citizenship and exiled."},{t:"Catholic Church leaders expelled; priests arrested",d:"2023–24",x:"Bishop Álvarez sentenced then expelled; dozens of priests arrested."}],
+  87:[{t:"Mass pardons for Jan. 6 insurrectionists",d:"Jan 2025",x:"1,500+ pardons including those convicted of assaulting police."},{t:"DOGE dismantling of federal oversight agencies",d:"2025",x:"Mass dismissal of inspectors general; NLRB, FTC, CFPB sidelined."},{t:"Schedule F: civil service protections stripped",d:"2025",x:"Tens of thousands reclassified to at-will status; 150 years of civil service protections reversed."},{t:"Press exclusion and FCC broadcast licence reviews",d:"2025",x:"AP, NPR excluded from briefings; FCC reviewed licences of critical networks."},{t:"Defying federal court orders",d:"2025",x:"Administration publicly defied multiple court rulings; threatened judges."}],
+  89:[{t:"Stolen 2024 election — vote tallies withheld",d:"Jul 2024",x:"Carter Center, OAS, 60+ govts rejected results; opposition actas showed González won 67%."},{t:"700+ political prisoners; González exiled",d:"2024–25",x:"Opposition candidate exiled; Machado evaded arrest; state collapse accelerating."}],
+  98:[{t:"Abolished presidential term limits",d:"2018",x:"Constitutional amendment enabling Xi's indefinite rule."},{t:"NSL: Hong Kong autonomy ended",d:"2020–25",x:"100+ activists prosecuted; all pan-dem parties disbanded."},{t:"Xinjiang: 1M+ Uyghurs in 're-education camps'",d:"Ongoing",x:"UN documented systematic surveillance, forced labor, family separations."}],
+  101:[{t:"Weaponization of Enforcement Directorate against opposition (400% surge)",d:"2019–25",x:"Cases against Congress, AAP, TMC leaders surged; critics call it judicial harassment."},{t:"Pegasus spyware used against journalists and opposition",d:"2021–25",x:"India 151st in RSF; journalists surveilled; Siddiqui killed."},{t:"'Bulldozer justice' — demolition of minority homes",d:"2022–24",x:"Homes demolished as extrajudicial punishment; Supreme Court partially intervened 2024."}],
+  105:[{t:"Judicial overhaul stripping Supreme Court powers",d:"2023",x:"400,000+ weekly protests; partially shelved during Gaza war."},{t:"ICC arrest warrant issued for Netanyahu",d:"Nov 2024",x:"ICC Pre-Trial Chamber issued warrant for crimes against humanity and war crimes."}],
+  133:[{t:"Murder of journalist Jamal Khashoggi",d:"Oct 2018",x:"CIA attributed killing to MBS; UN called it 'extrajudicial execution.'"},{t:"Women's rights activists imprisoned for campaigning for right to drive",d:"2018–25",x:"Activists who won the right to drive for women were then arrested and reportedly tortured."}],
+  141:[{t:"35,000+ arrested after 2020 stolen election",d:"2020–25",x:"Sviatlana Tsikhanouskaya leads government-in-exile; EU recognizes her."},{t:"Forced diversion of Ryanair flight to arrest journalist",d:"May 2021",x:"MiG-29 scrambled; Roman Protasevich arrested; EU imposed aviation ban."}],
+  153:[{t:"14+ constitutional amendments using supermajority (2010–25)",d:"2010–present",x:"V-Dem's flagship backsliding case: Fidesz captured courts, media, electoral law."},{t:"KESMA media monopoly — 500+ outlets",d:"Ongoing",x:"Pro-government KESMA controls dominant media; public broadcasting captured."},{t:"Central European University expelled to Austria",d:"2017–25",x:"Lex NGO forced foreign-funded civil society to register as 'foreign agents.'"}],
+  172:[{t:"Death of Alexei Navalny in Arctic penal colony",d:"Feb 2024",x:"Opposition leader died; circumstances attributed to state action; 3 days before exchange."},{t:"Wartime censorship — 'discrediting the army' criminalized",d:"2022–25",x:"6,000+ prosecuted; calling war a 'war' carries up to 15 years."},{t:"2020 constitutional changes removing presidential term limits",d:"2020",x:"Fraudulent referendum reset Putin's clock; rule potentially to 2036."}],
+  175:[{t:"Anti-corruption prosecution office (NAKA) dismantled",d:"2024",x:"NAKA heads replaced; ongoing cases stalled."},{t:"Public broadcaster RTVS dissolved by parliament",d:"2024",x:"Independent broadcaster dissolved; replaced with government-friendly STVR."},{t:"Pro-Russia pivot — blocked Ukraine aid, met Putin in Moscow",d:"2023–25",x:"Only EU leader to visit Putin; blocked bilateral military aid."}],
+};
+
+/* ── LOOK-UP CONSTANTS ── */
+const RC={Africa:"#b45309",Americas:"#0891b2",Asia:"#7c3aed",Europe:"#0f766e","Europe/Asia":"#5b21b6","Middle East":"#b91c1c",Oceania:"#be185d"};
+const FHM={F:{l:"Free",c:"bF"},PF:{l:"Partly Free",c:"bPF"},NF:{l:"Not Free",c:"bNF"}};
+const EIUM={FD:{l:"Full Democracy",c:"bFD"},FlD:{l:"Flawed Democracy",c:"bFlD"},HR:{l:"Hybrid Regime",c:"bHR"},Auth:{l:"Authoritarian",c:"bAuth"}};
+const EROC={low:"blow",medium:"bmed",high:"bhigh",critical:"bcrit"};
+const TRND={up:{i:"↑",c:"tup"},stable:{i:"→",c:"tstb"},down:{i:"↓",c:"tdn"},crisis:{i:"⚡",c:"tcr"}};
+const SCOL=v=>v>0.65?"#4dcc8a":v>0.4?"#fcd34d":v>0.2?"#f07840":"#f05050";
+const RSFCOL=r=>r>0&&r<30?"#4dcc8a":r<80?"#fcd34d":r<150?"#f07840":"#f05050";
+const SEV_COL={critical:"#ef4444",high:"#f97316",medium:"#f59e0b",low:"#22c55e"};
+const CAT_ICO={elections:"🗳",press_freedom:"📰",judiciary:"⚖️",executive_overreach:"👑",coup:"💥",civil_society:"✊",military:"🎖️",other:"📌"};
+const REGIONS=["All","Africa","Americas","Asia","Europe","Oceania"];
+const FH_OPTS=["All","Free","Partly Free","Not Free"];
+const EIU_OPTS=["All","Full Democracy","Flawed Democracy","Hybrid Regime","Authoritarian"];
+const EROS_OPTS=["All","low","medium","high","critical"];
+const TREND_OPTS=["All","up","stable","down","crisis"];
+const NEWS_TTL=12*60*60*1000;
+const INTEL_TTL=6*60*60*1000;
+
+const getKey=()=>localStorage.getItem("gdm_key")||"";
+const setKey=k=>localStorage.setItem("gdm_key",k);
+const getCache=k=>{try{const d=JSON.parse(localStorage.getItem(k));if(!d)return null;if(Date.now()-d.ts>d.ttl)return null;return d.v;}catch{return null;}};
+const setCache=(k,v,ttl)=>{try{localStorage.setItem(k,JSON.stringify({ts:Date.now(),ttl,v}));}catch{}};
+
+async function callClaude(sys,msg,search=true){
+  const key=getKey();if(!key)throw new Error("NO_KEY");
+  const body={model:"claude-sonnet-4-20250514",max_tokens:1024,system:sys,messages:[{role:"user",content:msg}]};
+  if(search)body.tools=[{type:"web_search_20250305",name:"web_search"}];
+  const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  const d=await r.json();
+  return d.content.filter(b=>b.type==="text").map(b=>b.text).join("");
+}
+const parseJ=t=>{const m=t.match(/(\[[\s\S]*?\]|\{[\s\S]*?\})/);if(m)try{return JSON.parse(m[0]);}catch{}return null;};
+
+async function fetchNews(country){
+  const ck=`gdm_news_${country}`;const cached=getCache(ck);if(cached)return cached;
+  const sys=`You are a political news aggregator. Find latest news (last 48h) on democracy, governance, elections, civil rights, or political crisis in the specified country from credible outlets: BBC, Al Jazeera, Reuters, AFP, CNN, France 24, NYT, Guardian, DW, RFI, AP. Return ONLY a JSON array of 3–4 items. No markdown. Each: {headline:string(≤15 words), summary:string(2 sentences), source:string, url:string, date:string}`;
+  const t=await callClaude(sys,`Find latest political/democracy news for ${country} from the past 48 hours. JSON array only.`);
+  const d=parseJ(t);if(d){setCache(ck,d,NEWS_TTL);return d;}throw new Error("Parse failed");
+}
+
+async function fetchIntel(){
+  const ck="gdm_intel";const cached=getCache(ck);if(cached)return cached;
+  const sys=`You are a democracy intelligence analyst. Search for significant democratic erosion events globally in the past 7 days. Return ONLY a JSON array of 8–12 alerts. Each: {country:string, event:string(≤10 words), severity:"critical"|"high"|"medium"|"low", category:"elections"|"press_freedom"|"judiciary"|"executive_overreach"|"coup"|"civil_society"|"military"|"other", date:string, summary:string(2-3 sentences)}`;
+  const t=await callClaude(sys,`Search for democratic erosion events globally, past 7 days (today: ${new Date().toDateString()}). JSON array only.`);
+  const d=parseJ(t);if(d){setCache(ck,d,INTEL_TTL);return d;}throw new Error("Parse failed");
+}
+
+async function fetchBio(type,subject,country){
+  const ck=`gdm_bio_${type}_${subject.slice(0,20)}`;const cached=getCache(ck);if(cached)return cached;
+  const sys=`You are a political encyclopedia. Return ONLY a JSON object. No markdown. Provide: {bio:string(3–4 sentences), keyFacts:string[](4 interesting verified facts), significance:string(2 sentences)}`;
+  const t=await callClaude(sys,`Provide factual information about ${type}: "${subject}" from ${country}. Return JSON only.`,false);
+  const d=parseJ(t);if(d){setCache(ck,d,7*24*60*60*1000);return d;}throw new Error("Parse failed");
+}
+
+/* ── ScoreBar ── */
+function ScoreBar({val,max=1}){
+  const pct=Math.min(100,Math.round((val/max)*100));
+  const col=max===1?SCOL(val):SCOL(val/max);
+  const disp=max===1?val.toFixed(2):val;
+  return <div className="sbw"><span className="sbn" style={{color:col}}>{disp}</span><div className="sbt"><div className="sbf" style={{width:pct+"%",background:col}}/></div></div>;
+}
+
+/* ── NewsCell (inline) ── */
+function NewsCell({country,onShowFull}){
+  const [s,ss]=useState({loading:false,items:null,err:null});
+  const key=getKey();
+  useEffect(()=>{const c=getCache(`gdm_news_${country}`);if(c)ss({loading:false,items:c,err:null});},[country]);
+  const load=useCallback(async()=>{
+    if(!key){ss({loading:false,items:null,err:"Set API key"});return;}
+    ss({loading:true,items:null,err:null});
+    try{const d=await fetchNews(country);ss({loading:false,items:d,err:null});}
+    catch(e){ss({loading:false,items:null,err:e.message==="NO_KEY"?"Set API key":"Fetch failed"});}
+  },[country,key]);
+  if(s.loading)return <span className="nld">Searching…</span>;
+  if(!s.items&&!s.err)return <button className="lnb" onClick={load}>Load news</button>;
+  if(s.err)return <div style={{display:"flex",gap:5,alignItems:"center"}}><span style={{fontFamily:"var(--mono)",fontSize:9,color:"var(--cr3)"}}>{s.err}</span>{key&&<button className="lnb" onClick={load}>↺</button>}</div>;
+  const top=s.items?.[0];if(!top)return null;
+  return <div className="ncw">
+    <div className="nhl" onClick={()=>onShowFull(s.items)}>{top.headline}</div>
+    <div className="nmt"><span className="nsrc">{top.source}</span> · {top.date}</div>
+    {s.items.length>1&&<button className="lnb" style={{marginTop:4}} onClick={()=>onShowFull(s.items)}>+{s.items.length-1} more</button>}
+  </div>;
+}
+
+/* ── Profile Panel ── */
+function Panel({c,initTab,newsItems:initNews,onClose}){
+  const [tab,setTab]=useState(initTab||"overview");
+  const [news,setNews]=useState(initNews||null);
+  const [nLoad,setNLoad]=useState(false);
+  const [bio,setBio]=useState(null);
+  const [bLoad,setBLoad]=useState(false);
+  const [bType,setBType]=useState(null);
+  const key=getKey();
+  const rc=RC[c.region]||"#4b5563";
+  const ea=EROSION_ACTIONS[c.id]||[];
+
+  const loadNews=useCallback(async()=>{
+    const cached=getCache(`gdm_news_${c.country}`);if(cached){setNews(cached);return;}
+    if(!key)return;setNLoad(true);
+    try{const d=await fetchNews(c.country);setNews(d);}catch{}setNLoad(false);
+  },[c.country,key]);
+
+  const loadBio=useCallback(async(type,subject)=>{
+    if(!key)return;setBLoad(true);setBio(null);setBType(type);
+    const ck=`gdm_bio_${type}_${subject.slice(0,20)}`;const cached=getCache(ck);
+    if(cached){setBio(cached);setBLoad(false);setBType(type);return;}
+    try{const d=await fetchBio(type,subject,c.country);setBio(d);setCache(ck,d,7*24*60*60*1000);}catch{}setBLoad(false);
+  },[key,c.country]);
+
+  useEffect(()=>{if(tab==="news"&&!news)loadNews();},[tab]);
+
+  const TABS=[{id:"overview",l:"📋 Overview"},{id:"erosion",l:"⚠ Erosion"},{id:"news",l:"📰 News"},{id:"bio",l:"👤 Leader"},{id:"facts",l:"🔍 Facts"}];
+
+  return <div className="ovl" onClick={e=>{if(e.target===e.currentTarget)onClose();}}>
+    <div className="panel">
+      <div className="ph">
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+          <div>
+            <div className="ptit">{c.flag} {c.country}</div>
+            <div className="psub">{c.leader} · {c.title} · {c.party}</div>
+            <div style={{display:"flex",gap:5,flexWrap:"wrap",marginTop:7}}>
+              <span className={`bdg ${FHM[c.fhStatus]?.c}`}>{FHM[c.fhStatus]?.l}</span>
+              <span className={`bdg ${EIUM[c.eiuCat]?.c}`}>{EIUM[c.eiuCat]?.l}</span>
+              <span className={`bdg ${EROC[c.erosion]}`} style={{textTransform:"capitalize"}}>{c.erosion} risk</span>
+            </div>
+          </div>
+          <button className="pcl" onClick={onClose}>✕</button>
+        </div>
+        <div style={{display:"flex",gap:5,flexWrap:"wrap",marginTop:10}}>
+          {TABS.map(t=><button key={t.id} className={`tpill ${tab===t.id?"on":""}`} onClick={()=>setTab(t.id)}>{t.l}</button>)}
+        </div>
+      </div>
+      <div className="pb">
+        {/* OVERVIEW */}
+        {tab==="overview"&&<>
+          <div className="stit">LEADERSHIP & ELECTORAL SYSTEM</div>
+          <div className="igr">
+            {[{l:"System",v:c.system},{l:"Electoral",v:c.electoral},{l:"Party",v:c.party},{l:"Spectrum",v:c.spectrum},{l:"Last Election",v:"See row"},{l:"Region",v:c.region}].map(({l,v})=>
+              <div key={l} className="ic"><label>{l}</label><div className="v">{v}</div></div>)}
+          </div>
+          <div className="stit">DEMOCRACY INDICES — LATEST DATA</div>
+          {[{l:"V-Dem Liberal Democracy Index 2025",v:c.vdem_ldi,max:1,note:"0–1 · V-Dem 2025"},{l:"Freedom House Score 2025",v:c.fh,max:100,note:"0–100 · FH 2025"},...(c.ibrahim?[{l:"Mo Ibrahim Governance Index 2024",v:c.ibrahim,max:100,note:"Africa only · Mo Ibrahim 2024"}]:[])].map(m=>
+            <div key={m.l} style={{background:"var(--ink3)",border:"1px solid var(--ink4)",borderRadius:6,padding:"10px 12px",marginBottom:8}}>
+              <div style={{fontFamily:"var(--mono)",fontSize:9,color:"var(--mist)",marginBottom:5}}>{m.l}</div>
+              <ScoreBar val={m.v} max={m.max}/>
+              <div style={{fontFamily:"var(--mono)",fontSize:9,color:"var(--mist)",marginTop:3}}>{m.note}</div>
+            </div>)}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginTop:0}}>
+            <div className="ic"><label>RSF Press Freedom 2025</label><div className="v" style={{color:RSFCOL(c.rsf),fontFamily:"var(--mono)",fontSize:16,fontWeight:700}}>#{c.rsf||"N/A"}</div></div>
+            <div className="ic"><label>EIU Democracy 2024</label><div className="v"><span className={`bdg ${EIUM[c.eiuCat]?.c}`}>{EIUM[c.eiuCat]?.l}</span></div></div>
+            <div className="ic"><label>Trend</label><div className="v"><span className={TRND[c.trend]?.c} style={{fontSize:20}}>{TRND[c.trend]?.i}</span></div></div>
+            <div className="ic"><label>Erosion Risk</label><div className="v"><span className={`bdg ${EROC[c.erosion]}`} style={{textTransform:"capitalize"}}>{c.erosion}</span></div></div>
+          </div>
+          <div style={{fontFamily:"var(--mono)",fontSize:9,color:"var(--mist)",marginTop:8,padding:"6px 9px",background:"var(--ink3)",borderRadius:5,border:"1px solid var(--ink4)"}}>Data: V-Dem 2025 · Freedom House 2025 · RSF 2025 · EIU 2024 · Mo Ibrahim Foundation 2024</div>
+        </>}
+
+        {/* EROSION ACTIONS */}
+        {tab==="erosion"&&<>
+          <div className="stit">GOVERNMENT ACTIONS CONTRIBUTING TO DEMOCRATIC DECLINE</div>
+          {ea.length>0?ea.map((a,i)=>
+            <div key={i} className="edi">
+              <div className="eti">{a.t}</div>
+              <div className="edt">{a.d}</div>
+              <div className="edx">{a.x}</div>
+            </div>)
+          :<div style={{color:"var(--mist)",fontFamily:"var(--mono)",fontSize:11,padding:"20px 0",textAlign:"center"}}>No major documented erosion actions.</div>}
+          <div style={{marginTop:8,padding:"6px 9px",background:"rgba(200,168,75,.05)",border:"1px solid rgba(200,168,75,.15)",borderRadius:5}}>
+            <div style={{fontFamily:"var(--mono)",fontSize:9,color:"var(--mist)"}}>Sources: V-Dem · Freedom House · RSF · Human Rights Watch · Amnesty International</div>
+          </div>
+        </>}
+
+        {/* NEWS */}
+        {tab==="news"&&<>
+          <div className="stit">
+            LATEST NEWS — {c.country.toUpperCase()}
+            <button className="btn bb bsm" onClick={loadNews} disabled={nLoad}>{nLoad?"Searching…":"↺ Refresh"}</button>
+          </div>
+          {!key&&<div className="aw2 awrn">Add API key in Settings to enable live news.</div>}
+          {nLoad&&<div className="ail"><span className="sp">🌐</span><p>Searching BBC · Al Jazeera · Reuters · CNN · France 24…</p></div>}
+          {news&&news.map((n,i)=><div key={i} className="npi">
+            <div className="nph">{n.headline}</div>
+            <div className="npb">{n.summary}</div>
+            <div className="npf">
+              <span className="nps">{n.source}</span>
+              <span className="npd">{n.date}</span>
+              {n.url&&n.url!=="#"&&<a href={n.url} target="_blank" rel="noopener noreferrer" style={{fontFamily:"var(--mono)",fontSize:9,color:"var(--gold)"}}>Read →</a>}
+            </div>
+          </div>)}
+          {!nLoad&&!news&&key&&<button className="btn bb" style={{width:"100%",padding:"10px"}} onClick={loadNews}>Load Latest News</button>}
+          <div style={{fontFamily:"var(--mono)",fontSize:9,color:"var(--mist)",marginTop:6}}>Sources: BBC · Al Jazeera · Reuters · AFP · CNN · France 24 · NYT · Guardian · DW · RFI. Cache: 12h.</div>
+        </>}
+
+        {/* LEADER BIO */}
+        {tab==="bio"&&<>
+          <div className="stit">
+            LEADER: {c.leader.toUpperCase()}
+            {key&&<button className="btn bb bsm" onClick={()=>loadBio("political leader",c.leader)} disabled={bLoad}>{bLoad&&bType==="political leader"?"Loading…":"🤖 AI Expand"}</button>}
+          </div>
+          <p className="btext" style={{marginBottom:12}}>{c.leader} is the current {c.title} of {c.country}, representing the {c.party} ({c.spectrum} political spectrum). The country operates under a {c.system} system with elections conducted through {c.electoral}.</p>
+          {bio&&bType==="political leader"&&<>
+            <div className="stit">AI BIOGRAPHY</div>
+            <p className="btext" style={{marginBottom:10}}>{bio.bio}</p>
+            {bio.keyFacts?.map((f,i)=><div key={i} className="fac"><span className="fat">📌 {f}</span></div>)}
+            <div className="stit">POLITICAL SIGNIFICANCE</div>
+            <p className="btext">{bio.significance}</p>
+          </>}
+          {bLoad&&bType==="political leader"&&<div className="ail"><span className="sp">🌐</span><p>Generating biography…</p></div>}
+          {!key&&<div className="aw2 awrn" style={{marginTop:12}}>Add API key in Settings for AI-expanded biographies.</div>}
+        </>}
+
+        {/* FACTS */}
+        {tab==="facts"&&<>
+          <div className="stit">
+            POLITICAL FACTS — {c.country.toUpperCase()}
+            {key&&<button className="btn bb bsm" onClick={()=>loadBio("country",c.country)} disabled={bLoad}>{bLoad&&bType==="country"?"Loading…":"🤖 More Facts"}</button>}
+          </div>
+          {[
+            `${c.country} is governed under a ${c.system} system with elections held via ${c.electoral}.`,
+            `Freedom House (2025) classifies ${c.country} as "${FHM[c.fhStatus]?.l}" with a score of ${c.fh}/100.`,
+            `RSF Press Freedom Index 2025 ranks ${c.country} ${c.rsf>0?"#"+c.rsf+" out of 180":"N/A"}.`,
+            `V-Dem Liberal Democracy Index (2025): ${c.vdem_ldi.toFixed(2)}/1.00 — classified as ${c.erosion} erosion risk.`,
+            `EIU Democracy Index (2024) classifies ${c.country} as a "${EIUM[c.eiuCat]?.l}".`,
+            ...(c.ibrahim?[`Mo Ibrahim Governance Index (2024): ${c.ibrahim}/100 (Africa).`]:[]),
+          ].map((f,i)=><div key={i} className="fac"><span className="fat">{'🌍📊⚖️🗳📰🏛'[i]||'🔍'} {f}</span></div>)}
+          {bio&&bType==="country"&&<>
+            <div className="stit">AI COUNTRY PROFILE</div>
+            <p className="btext" style={{marginBottom:10}}>{bio.bio}</p>
+            {bio.keyFacts?.map((f,i)=><div key={i} className="fac"><span className="fat">🔍 {f}</span></div>)}
+          </>}
+          {bLoad&&bType==="country"&&<div className="ail"><span className="sp">🌐</span><p>Generating country profile…</p></div>}
+          {!key&&<div className="aw2 awrn" style={{marginTop:12}}>Add API key in Settings for AI-expanded profiles.</div>}
+        </>}
+      </div>
+    </div>
+  </div>;
+}
+
+/* ── LEADERS TABLE ── */
+function LeadersTable(){
+  const [q,setQ]=useState("");
+  const [reg,setReg]=useState("All");
+  const [fhF,setFhF]=useState("All");
+  const [eiuF,setEiuF]=useState("All");
+  const [erF,setErF]=useState("All");
+  const [trF,setTrF]=useState("All");
+  const [sk,setSk]=useState("country");
+  const [sd,setSd]=useState("asc");
+  const [panel,setPanel]=useState(null);
+  const [demo,setDemo]=useState(false);
+
+  const filtered=useMemo(()=>{
+    let d=COUNTRIES;
+    if(reg!=="All")d=d.filter(c=>c.region===reg);
+    if(fhF!=="All"){const m={Free:"F","Partly Free":"PF","Not Free":"NF"};d=d.filter(c=>c.fhStatus===m[fhF]);}
+    if(eiuF!=="All"){const m={"Full Democracy":"FD","Flawed Democracy":"FlD","Hybrid Regime":"HR","Authoritarian":"Auth"};d=d.filter(c=>c.eiuCat===m[eiuF]);}
+    if(erF!=="All")d=d.filter(c=>c.erosion===erF);
+    if(trF!=="All")d=d.filter(c=>c.trend===trF);
+    if(q.trim()){const ql=q.toLowerCase();d=d.filter(c=>c.country.toLowerCase().includes(ql)||c.leader.toLowerCase().includes(ql)||c.party.toLowerCase().includes(ql)||c.system.toLowerCase().includes(ql)||c.region.toLowerCase().includes(ql));}
+    return [...d].sort((a,b)=>{
+      let av=a[sk]??"",bv=b[sk]??"";
+      if(typeof av==="string")av=av.toLowerCase();if(typeof bv==="string")bv=bv.toLowerCase();
+      return(av<bv?-1:av>bv?1:0)*(sd==="asc"?1:-1);
+    });
+  },[q,reg,fhF,eiuF,erF,trF,sk,sd]);
+
+  const sort=k=>{if(sk===k)setSd(d=>d==="asc"?"desc":"asc");else{setSk(k);setSd("asc");}};
+  const SA=({k})=><span style={{marginLeft:2,opacity:sk===k?1:.25,fontSize:8}}>{sk===k?(sd==="asc"?"▲":"▼"):"⇅"}</span>;
+
+  return <>
+    <div className="fbar">
+      <input className="finp" value={q} onChange={e=>setQ(e.target.value)} placeholder="Search country, leader, party, region…"/>
+      {[{l:"Region",items:REGIONS,v:reg,set:setReg,acc:"#0891b2"},{l:"FH Status",items:FH_OPTS,v:fhF,set:setFhF,acc:"#4dcc8a"},{l:"Democracy",items:EIU_OPTS,v:eiuF,set:setEiuF,acc:"#5588ee"},{l:"Erosion",items:EROS_OPTS,v:erF,set:setErF,acc:"#f05050"},{l:"Trend",items:TREND_OPTS,v:trF,set:setTrF,acc:"#f5b544"}].map(f=>
+        <div key={f.l} style={{display:"flex",alignItems:"center",gap:5}}>
+          <span className="flbl" style={{color:f.acc}}>{f.l}</span>
+          <select className="fsel" value={f.v} onChange={e=>f.set(e.target.value)} style={{borderColor:f.v!=="All"?f.acc+"55":undefined,color:f.v!=="All"?f.acc:undefined}}>
+            {f.items.map(i=><option key={i}>{i}</option>)}
+          </select>
+        </div>)}
+      <button className="btn" style={{background:demo?"rgba(26,58,122,.25)":"transparent",borderColor:demo?"#2255b8":"var(--fog)",color:demo?"var(--sa3)":"var(--smoke)"}} onClick={()=>setDemo(v=>!v)}>
+        {demo?"👥 Leaders":"📊 Metrics"}
+      </button>
+      <span className="rct">{filtered.length}/{COUNTRIES.length} countries</span>
+    </div>
+
+    <div className="twrap">
+      <table>
+        <thead><tr>
+          <th onClick={()=>sort("country")} className={sk==="country"?"thon":""}>Country<SA k="country"/></th>
+          <th onClick={()=>sort("region")} className={sk==="region"?"thon":""}>Region<SA k="region"/></th>
+          {!demo&&<>
+            <th onClick={()=>sort("leader")} className={sk==="leader"?"thon":""}>Leader<SA k="leader"/></th>
+            <th onClick={()=>sort("title")} className={sk==="title"?"thon":""}>Title<SA k="title"/></th>
+            <th onClick={()=>sort("party")} className={sk==="party"?"thon":""}>Party<SA k="party"/></th>
+            <th onClick={()=>sort("system")} className={sk==="system"?"thon":""}>System<SA k="system"/></th>
+            <th>Electoral System</th>
+            <th onClick={()=>sort("spectrum")} className={sk==="spectrum"?"thon":""}>Spectrum<SA k="spectrum"/></th>
+          </>}
+          {demo&&<>
+            <th onClick={()=>sort("vdem_ldi")} className={sk==="vdem_ldi"?"thon":""}>V-Dem LDI<SA k="vdem_ldi"/></th>
+            <th onClick={()=>sort("fh")} className={sk==="fh"?"thon":""}>FH Score<SA k="fh"/></th>
+            <th onClick={()=>sort("fhStatus")} className={sk==="fhStatus"?"thon":""}>FH Status<SA k="fhStatus"/></th>
+            <th onClick={()=>sort("eiuCat")} className={sk==="eiuCat"?"thon":""}>EIU Type<SA k="eiuCat"/></th>
+            <th onClick={()=>sort("rsf")} className={sk==="rsf"?"thon":""}>RSF Rank<SA k="rsf"/></th>
+            <th onClick={()=>sort("trend")} className={sk==="trend"?"thon":""}>Trend<SA k="trend"/></th>
+            <th onClick={()=>sort("erosion")} className={sk==="erosion"?"thon":""}>Erosion<SA k="erosion"/></th>
+          </>}
+          <th>Erosion Actions</th>
+          <th>Today's News</th>
+        </tr></thead>
+        <tbody>
+          {filtered.map((c,i)=>{
+            const rc=RC[c.region]||"#4b5563";
+            const ea=EROSION_ACTIONS[c.id]||[];
+            return <tr key={c.id} className="dr" onClick={()=>setPanel({c,tab:"overview"})}>
+              <td className="tdc" style={{borderLeftColor:rc}}>
+                <span style={{marginRight:5,fontSize:13}}>{c.flag}</span>
+                <span className="tl">{c.country}</span>
+                <div><span className="dstamp">{c.id <= 54?"V-Dem 25/FH 25":"V-Dem 25/FH 25"}</span></div>
+              </td>
+              <td><span style={{fontFamily:"var(--mono)",fontSize:9,fontWeight:700,color:rc,letterSpacing:".06em"}}>{c.region}</span></td>
+              {!demo&&<>
+                <td><span className="tl" style={{fontStyle:"italic",fontSize:11}} onClick={e=>{e.stopPropagation();setPanel({c,tab:"bio"});}}>{c.leader}</span></td>
+                <td style={{fontSize:10,color:"var(--smoke)"}}>{c.title}</td>
+                <td style={{maxWidth:150,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}><span className="tl" style={{fontSize:11,color:"var(--sa3)"}} onClick={e=>{e.stopPropagation();setPanel({c,tab:"facts"});}}>{c.party}</span></td>
+                <td style={{maxWidth:150,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}><span style={{fontSize:10,color:"var(--silver)"}}>{c.system}</span></td>
+                <td style={{maxWidth:160,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}><span style={{fontSize:10,color:"var(--mist)"}}>{c.electoral}</span></td>
+                <td><span className="tag">{c.spectrum}</span></td>
+              </>}
+              {demo&&<>
+                <td><ScoreBar val={c.vdem_ldi}/></td>
+                <td><span style={{fontFamily:"var(--mono)",fontSize:12,fontWeight:700,color:SCOL(c.fh/100)}}>{c.fh}</span></td>
+                <td><span className={`bdg ${FHM[c.fhStatus]?.c}`} style={{fontSize:9}}>{FHM[c.fhStatus]?.l}</span></td>
+                <td><span className={`bdg ${EIUM[c.eiuCat]?.c}`} style={{fontSize:9}}>{EIUM[c.eiuCat]?.l}</span></td>
+                <td><span style={{fontFamily:"var(--mono)",fontSize:11,fontWeight:700,color:RSFCOL(c.rsf)}}>#{c.rsf||"N/A"}</span></td>
+                <td><span className={TRND[c.trend]?.c} style={{fontSize:16}}>{TRND[c.trend]?.i}</span></td>
+                <td><span className={`bdg ${EROC[c.erosion]}`} style={{textTransform:"capitalize",fontSize:9}}>{c.erosion}</span></td>
+              </>}
+              <td onClick={e=>e.stopPropagation()}>
+                {ea.length>0?<div>
+                  <ul className="erow">{ea.slice(0,2).map((a,i)=><li key={i} className="ei">{a.t}</li>)}</ul>
+                  <button className="mbt" onClick={()=>setPanel({c,tab:"erosion"})}>Details →</button>
+                </div>:<span style={{fontFamily:"var(--mono)",fontSize:9,color:"var(--mist)"}}>No major concerns</span>}
+              </td>
+              <td onClick={e=>e.stopPropagation()}>
+                <NewsCell country={c.country} onShowFull={items=>setPanel({c,tab:"news",newsItems:items})}/>
+              </td>
+            </tr>;
+          })}
+        </tbody>
+      </table>
+      {filtered.length===0&&<div style={{textAlign:"center",padding:"50px",color:"var(--mist)",fontFamily:"var(--mono)",fontSize:12}}>No countries match current filters.</div>}
+    </div>
+
+    <div className="srcbar">
+      <span style={{color:"var(--mist)",fontFamily:"var(--mono)",fontSize:9}}>DATA:</span>
+      {["V-Dem 2025","Freedom House 2025","RSF Press Freedom 2025","EIU 2024","Mo Ibrahim Foundation 2024"].map(s=><span key={s} className="si">● <span>{s}</span></span>)}
+      <span style={{marginLeft:"auto",fontFamily:"var(--mono)",fontSize:9,color:"var(--fog)"}}>Click any row for full profile · Click leader/party name for quick bio · {COUNTRIES.length} UN member states tracked</span>
+    </div>
+    {panel&&<Panel c={panel.c} initTab={panel.tab} newsItems={panel.newsItems} onClose={()=>setPanel(null)}/>}
+  </>;
+}
+
+/* ── DASHBOARD ── */
+function Dashboard(){
+  const all=COUNTRIES;
+  const cnt=fn=>all.filter(fn).length;
+  const n=all.length;
+  const avgLdi=(all.reduce((s,c)=>s+c.vdem_ldi,0)/n).toFixed(3);
+  const topLdi=[...all].sort((a,b)=>b.vdem_ldi-a.vdem_ldi).slice(0,15);
+  const botLdi=[...all].sort((a,b)=>a.vdem_ldi-b.vdem_ldi).slice(0,15);
+  const botRsf=[...all].filter(c=>c.rsf>0).sort((a,b)=>b.rsf-a.rsf).slice(0,12);
+  const declining=all.filter(c=>c.trend==="down"||c.trend==="crisis");
+
+  const cards=[
+    {l:"Full Democracies",v:cnt(c=>c.eiuCat==="FD"),col:"#6ba3f5",bg:"rgba(26,58,122,.2)"},
+    {l:"Flawed Democracies",v:cnt(c=>c.eiuCat==="FlD"),col:"#5dd4a8",bg:"rgba(34,100,80,.15)"},
+    {l:"Hybrid Regimes",v:cnt(c=>c.eiuCat==="HR"),col:"#f0a860",bg:"rgba(120,60,0,.15)"},
+    {l:"Authoritarian States",v:cnt(c=>c.eiuCat==="Auth"),col:"#f05050",bg:"rgba(139,26,26,.15)"},
+    {l:"Free (FH 2025)",v:cnt(c=>c.fhStatus==="F"),col:"#4dcc8a",bg:"rgba(26,122,74,.15)"},
+    {l:"Partly Free",v:cnt(c=>c.fhStatus==="PF"),col:"#f5b544",bg:"rgba(160,96,16,.15)"},
+    {l:"Not Free",v:cnt(c=>c.fhStatus==="NF"),col:"#f05050",bg:"rgba(139,26,26,.15)"},
+    {l:"Critical Erosion",v:cnt(c=>c.erosion==="critical"),col:"#ef4444",bg:"rgba(139,26,26,.2)"},
+    {l:"Declining / Crisis",v:declining.length,col:"#f07840",bg:"rgba(180,80,0,.15)"},
+    {l:"Improving",v:cnt(c=>c.trend==="up"),col:"#4dcc8a",bg:"rgba(26,122,74,.15)"},
+  ];
+
+  return <div>
+    <div style={{fontFamily:"var(--mono)",fontSize:10,color:"var(--mist)",marginBottom:13,letterSpacing:".07em"}}>
+      {n} COUNTRIES TRACKED · V-DEM 2025 · FREEDOM HOUSE 2025 · RSF 2025 · EIU 2024 · MO IBRAHIM 2024
+    </div>
+    <div style={{background:"var(--ink2)",border:"1px solid var(--ink4)",borderRadius:8,padding:"13px",marginBottom:14}}>
+      <div style={{fontFamily:"var(--mono)",fontSize:9,color:"var(--mist)",marginBottom:5,letterSpacing:".07em"}}>GLOBAL AVERAGE V-DEM LIBERAL DEMOCRACY INDEX 2025</div>
+      <ScoreBar val={parseFloat(avgLdi)} max={1}/>
+      <div style={{fontFamily:"var(--mono)",fontSize:9,color:"var(--mist)",marginTop:3}}>Global mean: {avgLdi} / 1.00 · Scale: 0 (no democracy) → 1 (full liberal democracy) · Source: V-Dem 2025</div>
+    </div>
+    <div className="dgr">
+      {cards.map(card=><div key={card.l} className="dc" style={{background:card.bg,borderColor:card.col+"33"}}>
+        <div className="dl">{card.l}</div>
+        <div className="dn" style={{color:card.col}}>{card.v}</div>
+        <div className="dbar"><div className="dfil" style={{width:`${(card.v/n*100).toFixed(0)}%`,background:card.col}}/></div>
+        <div style={{fontFamily:"var(--mono)",fontSize:9,color:"var(--mist)",marginTop:3}}>{((card.v/n)*100).toFixed(1)}%</div>
+      </div>)}
+    </div>
+    <div className="tc2">
+      <div className="lc">
+        <div className="lct" style={{color:"#4dcc8a"}}>🏆 TOP 15 — V-DEM LDI 2025</div>
+        {topLdi.map((c,i)=><div key={c.id} className="lr">
+          <span className="lrk">#{i+1}</span>
+          <span style={{fontSize:12}}>{c.flag}</span>
+          <span style={{flex:1,fontSize:11,color:"var(--chalk)"}}>{c.country}</span>
+          <span style={{fontFamily:"var(--mono)",fontSize:11,fontWeight:700,color:SCOL(c.vdem_ldi)}}>{c.vdem_ldi.toFixed(2)}</span>
+        </div>)}
+      </div>
+      <div className="lc">
+        <div className="lct" style={{color:"#f05050"}}>⚠ BOTTOM 15 — V-DEM LDI 2025</div>
+        {botLdi.map((c,i)=><div key={c.id} className="lr">
+          <span className="lrk">#{i+1}</span>
+          <span style={{fontSize:12}}>{c.flag}</span>
+          <span style={{flex:1,fontSize:11,color:"var(--chalk)"}}>{c.country}</span>
+          <span style={{fontFamily:"var(--mono)",fontSize:11,fontWeight:700,color:SCOL(c.vdem_ldi)}}>{c.vdem_ldi.toFixed(2)}</span>
+          <span className={`bdg ${EROC[c.erosion]}`} style={{fontSize:8}}>{c.erosion}</span>
+        </div>)}
+      </div>
+      <div className="lc">
+        <div className="lct" style={{color:"#f07840"}}>↓ DECLINING & CRISIS DEMOCRACIES ({declining.length})</div>
+        {declining.map(c=><div key={c.id} className="lr">
+          <span style={{fontSize:12}}>{c.flag}</span>
+          <span style={{flex:1,fontSize:11,color:"var(--chalk)"}}>{c.country}</span>
+          <span className={TRND[c.trend]?.c} style={{marginLeft:"auto",fontSize:15}}>{TRND[c.trend]?.i}</span>
+          <span className={`bdg ${FHM[c.fhStatus]?.c}`} style={{fontSize:9}}>{FHM[c.fhStatus]?.l}</span>
+        </div>)}
+      </div>
+      <div className="lc">
+        <div className="lct" style={{color:"#f0a860"}}>📰 WORST PRESS FREEDOM (RSF 2025)</div>
+        {botRsf.map(c=><div key={c.id} className="lr">
+          <span className="lrk">#{c.rsf}</span>
+          <span style={{fontSize:12}}>{c.flag}</span>
+          <span style={{flex:1,fontSize:11,color:"var(--chalk)"}}>{c.country}</span>
+          <span style={{fontFamily:"var(--mono)",fontSize:10,color:RSFCOL(c.rsf)}}>{c.region}</span>
+        </div>)}
+      </div>
+    </div>
+    {/* Regional */}
+    <div className="lc" style={{marginBottom:14}}>
+      <div className="lct" style={{color:"var(--gold)"}}>🌏 REGIONAL BREAKDOWN (Freedom House 2025)</div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(175px,1fr))",gap:10,marginTop:10}}>
+        {REGIONS.slice(1).map(reg=>{
+          const rc=COUNTRIES.filter(c=>c.region===reg);
+          if(!rc.length)return null;
+          const avgL=(rc.reduce((s,c)=>s+c.vdem_ldi,0)/rc.length).toFixed(2);
+          const rcol=RC[reg]||"#4b5563";
+          return <div key={reg} style={{background:"var(--ink3)",borderRadius:8,padding:"11px",borderLeft:`3px solid ${rcol}`}}>
+            <div style={{fontFamily:"var(--mono)",fontSize:10,fontWeight:700,color:rcol,marginBottom:6}}>{reg} ({rc.length})</div>
+            <div style={{fontFamily:"var(--mono)",fontSize:10,color:"var(--mist)",lineHeight:2}}>
+              <div>Avg V-Dem: <strong style={{color:SCOL(parseFloat(avgL))}}>{avgL}</strong></div>
+              <div>Free: <strong style={{color:"#4dcc8a"}}>{rc.filter(c=>c.fhStatus==="F").length}</strong> · PF: <strong style={{color:"#f5b544"}}>{rc.filter(c=>c.fhStatus==="PF").length}</strong> · NF: <strong style={{color:"#f05050"}}>{rc.filter(c=>c.fhStatus==="NF").length}</strong></div>
+              <div>Critical: <strong style={{color:"#ef4444"}}>{rc.filter(c=>c.erosion==="critical").length}</strong> · Declining: <strong style={{color:"#f07840"}}>{rc.filter(c=>c.trend==="down"||c.trend==="crisis").length}</strong></div>
+            </div>
+          </div>;
+        })}
+      </div>
+    </div>
+    {/* Mo Ibrahim Africa */}
+    <div className="lc">
+      <div className="lct" style={{color:"#b45309"}}>🌍 MO IBRAHIM GOVERNANCE INDEX 2024 (Africa — 54 countries)</div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(175px,1fr))",gap:7,marginTop:8}}>
+        {COUNTRIES.filter(c=>c.ibrahim!==null).sort((a,b)=>b.ibrahim-a.ibrahim).map(c=><div key={c.id} style={{display:"flex",alignItems:"center",gap:7,padding:"5px 7px",background:"var(--ink3)",borderRadius:5}}>
+          <span style={{fontSize:12}}>{c.flag}</span>
+          <span style={{flex:1,fontSize:11,color:"var(--chalk)"}}>{c.country}</span>
+          <span style={{fontFamily:"var(--mono)",fontSize:12,fontWeight:700,color:SCOL(c.ibrahim/100)}}>{c.ibrahim}</span>
+        </div>)}
+      </div>
+    </div>
+  </div>;
+}
+
+/* ── INTELLIGENCE ── */
+function Intelligence(){
+  const [state,ss]=useState({loading:false,alerts:null,err:null,ts:null});
+  const key=getKey();
+  const load=useCallback(async()=>{
+    if(!key){ss(s=>({...s,err:"Add API key in Settings"}));return;}
+    ss({loading:true,alerts:null,err:null,ts:null});
+    try{const d=await fetchIntel();ss({loading:false,alerts:d,err:null,ts:new Date().toLocaleString()});}
+    catch(e){ss({loading:false,alerts:null,err:"Scan failed: "+e.message,ts:null});}
+  },[key]);
+  useEffect(()=>{if(key)load();},[]);
+
+  const sorted=state.alerts?[...state.alerts].sort((a,b)=>["critical","high","medium","low"].indexOf(a.severity)-["critical","high","medium","low"].indexOf(b.severity)):[];
+  const SC={critical:"acr",high:"ahg",medium:"amd",low:"alw"};
+  const SS={critical:"asc",high:"ash",medium:"asm",low:"asl"};
+
+  return <div>
+    <div className="ihdr">
+      <div>
+        <div className="itit">🔴 DEMOCRATIC EROSION INTELLIGENCE BRIEFING</div>
+        <div className="isub">AI-powered · Live web search · BBC · Al Jazeera · Reuters · AFP · CNN · France 24 · NYT · Guardian · DW · 6h cache</div>
+        {state.ts&&<div style={{fontFamily:"var(--mono)",fontSize:9,color:"var(--mist)",marginTop:3}}>Last scan: {state.ts}</div>}
+      </div>
+      <button className="btn br" onClick={load} disabled={state.loading}>{state.loading?"⏳ Scanning…":"↺ Live Scan"}</button>
+    </div>
+    {!key&&<div className="aw2 awrn" style={{marginBottom:13}}>Add your Anthropic API key in <strong>Settings ⚙</strong> to enable live intelligence scans.</div>}
+    {state.loading&&<div className="ail"><span className="sp">🌐</span><p>Scanning global news for democratic erosion events…</p></div>}
+    {state.err&&<div style={{background:"rgba(139,26,26,.15)",border:"1px solid #c22222",borderRadius:8,padding:"13px",color:"var(--cr3)",fontFamily:"var(--mono)",fontSize:12,textAlign:"center",marginBottom:12}}>{state.err}</div>}
+    {sorted.length>0&&<>
+      <div style={{display:"flex",gap:9,flexWrap:"wrap",marginBottom:11}}>
+        {["critical","high","medium","low"].map(sv=>{const cnt=sorted.filter(a=>a.severity===sv).length;return cnt>0&&<div key={sv} style={{display:"flex",alignItems:"center",gap:5,background:`${SEV_COL[sv]}11`,border:`1px solid ${SEV_COL[sv]}33`,borderRadius:5,padding:"3px 9px"}}>
+          <span style={{width:6,height:6,borderRadius:"50%",background:SEV_COL[sv],display:"inline-block"}}/>
+          <span style={{fontFamily:"var(--mono)",fontSize:9,fontWeight:700,color:SEV_COL[sv],textTransform:"uppercase",letterSpacing:".08em"}}>{sv}</span>
+          <span style={{fontFamily:"var(--mono)",fontSize:10,color:"var(--mist)"}}>{cnt}</span>
+        </div>;})}
+        <span style={{fontFamily:"var(--mono)",fontSize:10,color:"var(--mist)",marginLeft:"auto",alignSelf:"center"}}>{sorted.length} events · {state.ts}</span>
+      </div>
+      {sorted.map((a,i)=><div key={i} className={`ac ${SC[a.severity]}`}>
+        <div style={{display:"flex",alignItems:"center",flexWrap:"wrap",gap:5,marginBottom:5}}>
+          <span style={{fontSize:15}}>{CAT_ICO[a.category]||"📌"}</span>
+          <span className={`asv ${SS[a.severity]}`}>{a.severity}</span>
+          <span className="acat">{a.category?.replace("_"," ")}</span>
+          <span className="actr">{a.country}</span>
+          <span className="adt" style={{marginLeft:"auto"}}>{a.date}</span>
+        </div>
+        <div className="aev">{a.event}</div>
+        <div className="asum">{a.summary}</div>
+      </div>)}
+      <div style={{marginTop:9,padding:"7px 11px",background:"var(--ink2)",border:"1px solid var(--ink4)",borderRadius:5}}>
+        <span style={{fontFamily:"var(--mono)",fontSize:9,color:"var(--mist)"}}>⚠ AI-generated from live web search. Cross-reference: V-Dem · Freedom House · RSF · Human Rights Watch · Amnesty International before academic citation.</span>
+      </div>
+    </>}
+  </div>;
+}
+
+/* ── SETTINGS ── */
+function Settings(){
+  const [local,setLocal]=useState(getKey());
+  const [saved,setSaved]=useState(false);
+  const save=()=>{setKey(local);setSaved(true);setTimeout(()=>setSaved(false),2000);};
+  const clear=()=>{setKey("");setLocal("");};
+  const clearC=()=>{Object.keys(localStorage).filter(k=>k.startsWith("gdm_")).forEach(k=>localStorage.removeItem(k));alert("All cache cleared.");};
+
+  return <div className="sw">
+    <div className="aw2 awrn">
+      <strong>⚠ Security:</strong> Your API key is stored only in your browser's localStorage and sent directly to Anthropic's API only. Never share your key. For public deployment, use a serverless proxy function to hide the key server-side.
+    </div>
+    <div className="scard">
+      <div className="stit2">ANTHROPIC API KEY</div>
+      <label className="flbl2">API Key (required for live news, intelligence, AI biographies)</label>
+      <input type="password" className="finp2" value={local} onChange={e=>setLocal(e.target.value)} placeholder="sk-ant-…"/>
+      <div className="fhnt">Get your key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>. Powers live country news (12h cache), intelligence briefings (6h cache), and AI-expanded biographies (7-day cache) for all {COUNTRIES.length} countries.</div>
+      <div style={{display:"flex",gap:7,marginTop:9}}>
+        <button className="btn bg" onClick={save}>{saved?"✓ Saved!":"Save Key"}</button>
+        {getKey()&&<button className="btn bgh" onClick={clear}>Clear Key</button>}
+        <button className="btn bgh" onClick={clearC}>Clear Cache</button>
+      </div>
+    </div>
+    <div className="scard">
+      <div className="stit2">DATA SOURCES & METHODOLOGY</div>
+      {[
+        {n:"V-Dem 2025",d:"Varieties of Democracy — Liberal Democracy Index (LDI), Electoral Democracy Index. 0–1 scale. 202 countries.",u:"https://v-dem.net"},
+        {n:"Freedom House 2025",d:"Freedom in the World — Score (0–100), Free/Partly Free/Not Free status. Published Feb 2025.",u:"https://freedomhouse.org"},
+        {n:"RSF Press Freedom Index 2025",d:"Reporters Without Borders — Press freedom rank (1–180) and score. Published May 2025.",u:"https://rsf.org"},
+        {n:"EIU Democracy Index 2024",d:"Economist Intelligence Unit — Score (0–10), 4-category classification (FD/FlD/HR/Auth).",u:"https://eiu.com"},
+        {n:"Mo Ibrahim Foundation 2024",d:"Ibrahim Index of African Governance (IIAG) — Governance score for 54 African countries.",u:"https://mo.ibrahim.foundation"},
+      ].map(s=><div key={s.n} style={{background:"var(--ink3)",border:"1px solid var(--ink4)",borderRadius:6,padding:"9px 11px",marginBottom:7}}>
+        <div style={{display:"flex",justifyContent:"space-between",gap:8}}>
+          <div>
+            <div style={{fontFamily:"var(--mono)",fontSize:10,fontWeight:700,color:"var(--chalk)",marginBottom:2}}>{s.n}</div>
+            <div style={{fontSize:11,color:"var(--silver)",lineHeight:1.5}}>{s.d}</div>
+          </div>
+          <a href={s.u} target="_blank" rel="noopener noreferrer" style={{fontFamily:"var(--mono)",fontSize:9,color:"var(--sa3)",whiteSpace:"nowrap",flexShrink:0}}>Visit →</a>
+        </div>
+      </div>)}
+    </div>
+    <div className="scard">
+      <div className="stit2">COVERAGE: {COUNTRIES.length} COUNTRIES</div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))",gap:9,marginTop:6}}>
+        {REGIONS.slice(1).map(r=>{const n=COUNTRIES.filter(c=>c.region===r).length;const rcol=RC[r]||"#4b5563";return <div key={r} style={{background:"var(--ink3)",borderRadius:6,padding:"9px 11px",borderLeft:`3px solid ${rcol}`}}>
+          <div style={{fontFamily:"var(--mono)",fontSize:10,fontWeight:700,color:rcol}}>{r}</div>
+          <div style={{fontFamily:"var(--mono)",fontSize:22,fontWeight:700,color:rcol,margin:"3px 0"}}>{n}</div>
+          <div style={{fontFamily:"var(--mono)",fontSize:9,color:"var(--mist)"}}>countries</div>
+        </div>;})}
+      </div>
+    </div>
+    <div className="scard">
+      <div className="stit2">DEPLOYMENT (MAKE THIS WEBSITE PUBLIC)</div>
+      <div className="aw2 ainf">
+        <strong>To publish as a public website in 30 seconds:</strong><br/>
+        1. Download this HTML file<br/>
+        2. Go to <a href="https://app.netlify.com/drop" target="_blank">app.netlify.com/drop</a><br/>
+        3. Drag and drop the file — you get a live public URL instantly<br/>
+        4. For a custom domain: configure DNS to point to Netlify<br/>
+        5. <strong>For public API access without exposing keys:</strong> Create a Netlify Function as a proxy so your API key stays server-side — visitors use your proxy, not their own key<br/>
+        6. <strong>Alternative hosting:</strong> GitHub Pages, Vercel, Cloudflare Pages (all free)
+      </div>
+    </div>
+  </div>;
+}
+
+/* ── ROOT APP ── */
+function App(){
+  const [tab,setTab]=useState("leaders");
+  const all=COUNTRIES;
+  const pills=[
+    {c:"#4dcc8a",l:`${all.filter(c=>c.fhStatus==="F").length} Free`},
+    {c:"#f5b544",l:`${all.filter(c=>c.fhStatus==="PF").length} Partly Free`},
+    {c:"#f05050",l:`${all.filter(c=>c.fhStatus==="NF").length} Not Free`},
+    {c:"#ef4444",l:`${all.filter(c=>c.erosion==="critical").length} Critical Risk`},
+    {c:"#f07840",l:`${all.filter(c=>c.trend==="down"||c.trend==="crisis").length} Declining`},
+    {c:"#4dcc8a",l:`${all.filter(c=>c.trend==="up").length} Improving`},
+  ];
+
+  return <>
+    <div className="mhd">
+      <div className="mhd-top wrap">
+        <div className="brand">
+          <h1>Global <em>Democracy</em> Monitor</h1>
+          <div className="brand-sub">All 193 UN Member States + Taiwan · V-Dem 2025 · Freedom House 2025 · RSF 2025 · EIU 2024 · Mo Ibrahim 2024</div>
+        </div>
+        <div className="hdr-pills">
+          {pills.map(p=><div key={p.l} className="pill"><span className="pdot" style={{background:p.c}}/>{p.l}</div>)}
+          {!getKey()&&<button className="btn bgh bsm" style={{marginLeft:4}} onClick={()=>setTab("settings")}>⚙ API Key</button>}
+        </div>
+      </div>
+      <div className="nav wrap">
+        {[{id:"leaders",l:"🌐 World Leaders"},{id:"dashboard",l:"📊 Dashboard"},{id:"intel",l:"🔴 Intelligence"},{id:"settings",l:"⚙ Settings"}].map(t=>
+          <button key={t.id} className={`ntab ${tab===t.id?"on":""}`} onClick={()=>setTab(t.id)}>{t.l}</button>)}
+      </div>
+    </div>
+    <div className="wrap" style={{paddingTop:14,paddingBottom:40}}>
+      {tab==="leaders"&&<LeadersTable/>}
+      {tab==="dashboard"&&<Dashboard/>}
+      {tab==="intel"&&<Intelligence/>}
+      {tab==="settings"&&<Settings/>}
+    </div>
+  </>;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
